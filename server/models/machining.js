@@ -1,8 +1,11 @@
 import mongoose from "mongoose";
 
 const machiningSchema = mongoose.Schema({ 
+    creatorID: String,
+    createdAt: Date,
+    tempID: String,
     partName: String, 
-    partId: String,
+    partID: String,
     creator: String,
     productionSite: {
         factoryName: String,

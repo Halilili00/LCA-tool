@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from 'react' 
 import { Button, Grid, Paper, TextField, Typography } from '@mui/material' 
-import axios from 'axios'
 import Input from '../toolbox/Input' 
 import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { createPost, updatePost } from '../redux/actions/postActions'
 
-const Form = ({posts}) => {
+const Form = () => {
     const[formData, setFormData] = useState({
-        tempId: "", 
+        tempID: "", 
         partName: "", 
         partID: "",
         creator: "",
@@ -30,15 +31,18 @@ const Form = ({posts}) => {
     })
     const[totalSum, setTotalSum] = useState(0);
     const param = useParams();
+    const dispatch = useDispatch();
+    const postToUpdate = useSelector((state) => (param.id ? state.postReducer.allPostDatas.find((post) => post._id === param.id): null));
 
     useEffect(() => {
-      if(param.id){
-        setFormData({...posts.find(post => post._id === param.id)})
-        //console.log(posts.find(post => post._id === param.id))
+      if(param.id && postToUpdate){
+        console.log(postToUpdate.validDate.start.slice(0, 10))
+        //setFormData(postToUpdate)
+        setFormData({...postToUpdate, validDate: {start: postToUpdate.validDate.start.slice(0, 10), end: postToUpdate.validDate.end.slice(0, 10)}})
       } else {
-        setFormData({...formData, tempId: `MAC-${Math.floor(Math.random()*Date.now())}`})
+        setFormData({...formData, tempID: `MAC-0001`})
       }
-    },[param.id])
+    },[param.id, postToUpdate])
 
     useEffect(() => {
       setTotalSum((formData.steelRemoved.value * formData.steelRemoved.coefficinet) + ((formData.steel.value - formData.steelRemoved.value) * formData.partWeight.coefficinet) + (formData.energyConsumption.value * formData.machiningTime.value * formData.machiningTime.coefficinet) +((formData.machiningLiquidConsumption.value / formData.annualProduction.value) * formData.machiningLiquidConsumption.coefficinet)
@@ -83,9 +87,14 @@ const Form = ({posts}) => {
       };
 
     const handleSubmit = async(e)=> { 
-        e.preventDefault(); 
-        await axios.post('http://localhost:5000/posts', formData)
-        alert("Data is added")
+        e.preventDefault();
+        if(param.id) {
+          dispatch(updatePost(formData._id, formData))
+          alert("Data is updated")
+        } else {
+          dispatch(createPost(formData))
+          alert("Data is added")
+        }
     }
     console.log(formData)
 
@@ -97,9 +106,9 @@ const Form = ({posts}) => {
     <form onSubmit={handleSubmit}>
         <Typography variant='h3'>Machining</Typography> 
         <Grid container sx={{mt:2}} spacing={2}> 
-            <Input label="Template Id" name="tempId" type="text" value={formData.tempId}/>
+            <Input label="Template Id" name="tempID" type="text" value={formData.tempID}/>
             <Input label="Part name" name="partName" type="text" value={formData.partName} handleChange={handleChange}/> 
-            <Input label="Part ID" name="partId" type="text" value={formData.partId} handleChange={handleChange}/>
+            <Input label="Part ID" name="partID" type="text" value={formData.partID} handleChange={handleChange}/>
             <Input label="Data collected by" name="creator" type="text" value={formData.creator} handleChange={handleChange}/>
             <Grid item xs={3.5}>
               <Typography variant="h5" style={{margin: "10px 0 0 20px", display: "flex"}}>Data  Valid</Typography>

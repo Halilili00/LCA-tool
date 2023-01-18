@@ -6,51 +6,40 @@ import Form from "./components/Form";
 import LCAData from "./components/LCAData";
 import { Box } from "@mui/material";
 import Navbar from "./components/Navbar";
-import SignIn from "./components/SignIn";
+import SignIn from "./components/SignInForm";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { PrivateRoutes } from "./toolbox/PrivateRoutes";
+import { useDispatch } from "react-redux";
+import { getData } from "./redux/actions/postActions";
 
 const App = () => {
-  const [posts, setPosts] = useState([]);
-  const location = useLocation();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
-
-  const getData = async () => {
-    const data = await axios.get('http://localhost:5000/posts', {
-      headers: { Authorization: 'Bearer ' + user.result.token }
-    })
-    setPosts(data.data)
-  }
-
-  const deletepost = async (id) => {
-    await axios.delete(`http://localhost:5000/posts/${id}`).then(setPosts(posts.filter((post) => post._id !== id)))
-  }
+  const user = JSON.parse(localStorage.getItem("profile"));
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getData();
-  }, [location])
+    if(user?.token){
+      dispatch(getData(user?.result._id))
+    }
+  }, [user?.result])
 
-
-  console.log(posts)
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_API_TOKEN}>
       <div className="App">
         <div className="App-header">
-          {user ?
-            <Box sx={{ width: { xl: "1400px" } }} m="auto">
-              <Navbar />
-              <Routes>
-                <Route path="/SignIn" element={<SignIn />} />
-                <Route path="/" element={<Form posts={posts} />} />
-                <Route path="/LCADatas" element={<LCAData posts={posts} deletepost={deletepost} />} />
-                <Route path="/:id" element={<Form posts={posts} />} />
-              </Routes>
-            </Box>
-            :
-            <SignIn />
-          }
+          <Box sx={{ width: { xl: "1400px" } }} m="auto">
+            <Navbar />
+            <Routes>
+              <Route element={<PrivateRoutes />}>
+                <Route path="/" element={<Form />} exact/>
+                <Route path="/LCADatas" element={<LCAData/>} />
+                <Route path="/:id" element={<Form />} />
+              </Route>
+              <Route path="/SignIn" element={<SignIn />} />
+            </Routes>
+          </Box>
         </div>
       </div>
-    </GoogleOAuthProvider>
+    </GoogleOAuthProvider >
   );
 };
 
