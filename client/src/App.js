@@ -9,19 +9,23 @@ import Navbar from "./components/Navbar";
 import SignIn from "./components/SignInForm";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { PrivateRoutes } from "./toolbox/PrivateRoutes";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getData } from "./redux/actions/postActions";
+import LCAPrintPage from "./components/LCAPrintPage";
+
 
 const App = () => {
-  const user = JSON.parse(localStorage.getItem("profile"));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(user?.token){
-      dispatch(getData(user?.result._id))
+    if (user?.token) {
+        dispatch(getData(user?.result._id))
     }
-  }, [user?.result])
+    console.log(user)
+}, [user?.result])
 
+  console.log("app")
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_API_TOKEN}>
       <div className="App">
@@ -33,8 +37,9 @@ const App = () => {
                 <Route path="/" element={<Form />} exact/>
                 <Route path="/LCADatas" element={<LCAData/>} />
                 <Route path="/:id" element={<Form />} />
+                <Route path="/LCADatas/:id" element={<LCAPrintPage/>} />
               </Route>
-              <Route path="/SignIn" element={<SignIn />} />
+              <Route path="/SignIn" element={<SignIn setUser={setUser}/>} />
             </Routes>
           </Box>
         </div>

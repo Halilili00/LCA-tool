@@ -6,7 +6,7 @@ import { signInGoogle } from '../redux/actions/authActions';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-export default function SignIn() {
+export default function SignIn({setUser}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -17,7 +17,7 @@ export default function SignIn() {
       <div style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop:"2%"}}>
         <GoogleLogin
           onSuccess={credentialResponse => {
-            dispatch(signInGoogle(credentialResponse, navigate))
+            dispatch(signInGoogle(credentialResponse, navigate)).then(setUser(JSON.parse(localStorage.getItem("profile"))))
           }}
           onError={() => {
             console.log('Login Failed');
