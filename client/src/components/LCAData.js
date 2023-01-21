@@ -1,18 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 
-import { Button, CircularProgress, Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Button, CircularProgress, Container, Grid, InputAdornment, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import LCADataTable from '../toolbox/LCADataTable';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { deletePost, getData } from '../redux/actions/postActions';
 import PieChart from '../toolbox/PieChart';
 import { Chart } from "react-google-charts";
+import SearchIcon from '@mui/icons-material/Search';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 const LCAData = () => {
     const posts = useSelector((state) => state.postReducer.allPostDatas);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [query, setQuery] = useState("");
     /*const param = useParams();
 
     useEffect(()=> {
@@ -26,14 +29,31 @@ const LCAData = () => {
     return (
         <Container>
             <Typography variant='h3'>LCADatas</Typography>
+            <Grid mb={1}>
+                <TextField
+                    style={{ backgroundColor: "whitesmoke", borderRadius: "20px", margin: "15px 0px 0px 0px" }}
+                    type="search"
+                    label="Search with..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    fullWidth
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <SearchIcon fontSize="large" color="primary" />
+                            </InputAdornment>
+                        )
+                    }}
+                />
+            </Grid>
             {!posts.length ? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' /> : posts.map((post) => (
                 <Grid container key={post._id} style={{ margin: "10px 0 15px 0", border: "5px double grey" }} direction="column">
                     <Grid item>
                         <Grid container style={{ margin: "10px 0 15px 15px" }} direction="column" justifyContent="flex-start" alignItems="flex-start">
-                            <Grid item>
+                            <Grid item display="flex">
                                 <Button variant='contained' onClick={() => dispatch(deletePost(post._id))}>Delete</Button>
                                 <Button variant='contained' onClick={() => navigate(`/${post._id}`)}>Update</Button>
-                                <Button variant='contained' onClick={() => navigate(`/LCADatas/${post._id}`)}>Print</Button>
+                                <Button variant='contained' onClick={() => navigate(`/LCADatas/${post._id}`)} style={{position:"end"}}><PictureAsPdfIcon/></Button>
                             </Grid>
                             <Grid item>
                                 <Typography variant='h5'>Part name: {post.partName}</Typography>
@@ -110,7 +130,7 @@ const LCAData = () => {
                         <SankeyChart post={post}/>
             </Grid>*/}
                     <Grid item style={{ backgroundColor: "white" }}>
-                        <PieChart post={post}/>
+                        <PieChart post={post} />
                     </Grid>
                     <Grid item style={{ backgroundColor: "white" }}>
                         <Chart chartType='Sankey' width="100%" height="500px" data={data} options={options} />
@@ -124,14 +144,14 @@ const LCAData = () => {
 export default LCAData
 
 
-  /*export const data2 = [
-    ["Pizza", "Popularity"],
-    ["Pepperoni", 33],
-    ["Hawaiian", 26],
-    ["Mushroom", 22],
-    ["Sausage", 10], // Below limit.
-    ["Anchovies", 9], // Below limit.
-  ];*/
+/*export const data2 = [
+  ["Pizza", "Popularity"],
+  ["Pepperoni", 33],
+  ["Hawaiian", 26],
+  ["Mushroom", 22],
+  ["Sausage", 10], // Below limit.
+  ["Anchovies", 9], // Below limit.
+];*/
 export const options = {};
 
 export const data = [

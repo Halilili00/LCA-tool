@@ -6,6 +6,7 @@
 .pnp.js
 /src/hooks
 sankey.json
+configuration.js
 
 # testing
 /coverage

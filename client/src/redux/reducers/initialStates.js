@@ -1,5 +1,5 @@
 const states = {
-    authData: null,
+    authData: JSON.parse(localStorage?.getItem("profile")),
     allPostDatas:[],
 }
 

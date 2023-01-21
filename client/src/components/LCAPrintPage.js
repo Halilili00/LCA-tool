@@ -16,7 +16,7 @@ const LCAPrintPage = () => {
             return () => clearTimeout(timer);
         }
     }, [])
-    console.log(document.readyState)
+    console.log(param)
     return (
         <Grid container key={post._id} style={{ margin: "10px 0 15px 0", border: "5px double grey" }} direction="column">
             <Grid item>

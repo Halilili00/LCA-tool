@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import decode from 'jwt-decode';
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/actions/authActions";
+import { useMsal } from "@azure/msal-react";
 
 const Navbar = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
@@ -11,11 +12,17 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
+  const { instance } = useMsal();
 
 
   const logoutUser = () => {
     handleClose();
-    dispatch(logout())
+    if (user.result.authMode === "Microsoft") {
+      instance.logoutRedirect({postLogoutRedirectUri: "/SignIn",})
+      dispatch(logout())
+    } else {
+      dispatch(logout())
+    }
     navigate("/SignIn")
   }
 

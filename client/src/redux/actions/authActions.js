@@ -7,9 +7,23 @@ export const signInGoogle = (res, navigate) => async (dispatch) => {
         //console.log(token)
         dispatch({
             type: actions.AUTH,
-            data: { result: { name: token.given_name + " " + token.family_name, email: token.email, _id: token.sub, imageUrl: token.picture }, token: res.credential }
+            data: { result: { name: token.given_name + " " + token.family_name, email: token.email, _id: token.sub, imageUrl: token.picture, authMode: "Google" }, token: res.credential }
         })
         //localStorage.setItem("profile", JSON.stringify({result: {name: token.given_name+ " " + token.family_name , email: token.email, _id: token.sub, imageUrl: token.picture}, token: res.credential}));
+        navigate("/");
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const signInMicrosoft = (res, navigate)=> async(dispatch) => {
+    try {
+        const token = jwt_decode(res.idToken)
+        //console.log(token)
+        dispatch({
+            type: actions.AUTH,
+            data: { result: { name: token.name, email: token.email, _id: token.sub, authMode: "Microsoft"}, token: res.idToken }
+        })
         navigate("/");
     } catch (error) {
         console.log(error)
