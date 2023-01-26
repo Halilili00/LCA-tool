@@ -4,7 +4,7 @@ import Chart from 'react-google-charts';
 const PieChart = ({ post }) => {
     const options2 = {
         title: "GHG breakdown",
-        legend: {position: "bottom"}
+        legend: { position: "bottom" }
     };
     /*const picked = (({annualProduction, energyConsumption, hydraulicOilConsumption}) => ({
         annualProduction, energyConsumption, hydraulicOilConsumption}))(post);
@@ -25,9 +25,13 @@ const PieChart = ({ post }) => {
         ["Site heating", (((post.oil.value / post.annualProduction.value) * post.oil.coefficinet) + ((post.electrycity.value / post.annualProduction.value) * post.electrycity.coefficinet))],
         ["Transportation", (((40 / 100) * post.euro5?.value * post.euro5?.coefficinet * (post.steel.value / 2000)) + ((40 / 100) * post.euro6?.value * post.euro6?.coefficinet * (post.steel.value / 2000)) + ((40 / 100) * post.euro7?.value * post.euro7?.coefficinet * (post.steel.value / 2000)) + ((4000 / 100) * post.roro?.value * post.roro?.coefficinet * (post.steel.value / 2000000)))],
     ]
+    
+    const sum = data.map(d => typeof d[1] === "number" ? d[1] : null).reduce( function( x, y) {
+        return x+y;
+    })
     console.log(data)
     return (
-        <Chart chartType='PieChart' data={data} options={options2} width="100%" height="400px" />
+        <>{sum>0 && <Chart chartType='PieChart' data={data} options={options2} width="100%" height="400px" />}</>
     )
 }
 

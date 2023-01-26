@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Avatar, Box, Button, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Box, Button, Divider, Grid, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import decode from 'jwt-decode';
 import { useDispatch } from "react-redux";
@@ -18,12 +19,12 @@ const Navbar = () => {
   const logoutUser = () => {
     handleClose();
     if (user.result.authMode === "Microsoft") {
-      instance.logoutRedirect({postLogoutRedirectUri: "/SignIn",})
+      instance.logoutRedirect({ postLogoutRedirectUri: "/", })
       dispatch(logout())
     } else {
       dispatch(logout())
     }
-    navigate("/SignIn")
+    navigate("/")
   }
 
   useEffect(() => {
@@ -55,16 +56,11 @@ const Navbar = () => {
         >
           LCA tool
         </Typography>
-        <Box display="flex">
-          <Button
-            component={Link}
-            variant="h4"
-            to="/LCADatas"
-            sx={{ color: "#fff" }}
-          >
+        <Box sx={{ display: { xs: "none", sm: "none", md: "flex" } }}>
+          <Button component={Link} variant="h4" to="/LCADatas" sx={{ color: "#fff" }}>
             Added Datas
           </Button>
-          <Button component={Link} variant="h4" to="/" sx={{ color: "#fff" }}>
+          <Button component={Link} variant="h4" to="/Forms" sx={{ color: "#fff" }}>
             Machining form
           </Button>
           {user ?
@@ -72,15 +68,12 @@ const Navbar = () => {
               <Box display="flex">
                 <div onClick={handleMenu} style={{ display: "flex" }}>
                   <Avatar alt={user.result.name} src={user.result.imageUrl}>{user?.result.name?.charAt(0)}</Avatar>
-                  <Typography
-                    variant="h6"
-                    style={{ marginLeft: "5px", marginTop: "3px" }}
-                  >
+                  <Typography variant="h6" style={{ marginLeft: "5px", marginTop: "3px" }}>
                     {user?.result.name}
                   </Typography>
                 </div>
                 <Menu
-                  sx={{ mt: "45px" }}
+                  sx={{ mt: "45px", display: { xs: "none", sm: "none", md: "flex" } }}
                   id="menu-appbar"
                   anchorEl={anchorEl}
                   anchorOrigin={{
@@ -95,22 +88,48 @@ const Navbar = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={logoutUser}>Logout</MenuItem>
+                  <MenuItem onClick={logoutUser}>Log out</MenuItem>
                 </Menu>
               </Box>
             </> :
-            <Button
-              component={Link}
-              variant="h4"
-              to="/SignIn"
-              sx={{ color: "#fff" }}
-
-            >
+            <Button component={Link} variant="h4" to="/" sx={{ color: "#fff" }}>
               Sign in
             </Button>
           }
-
         </Box>
+        <MenuOutlinedIcon onClick={handleMenu} sx={{ display: { xs: "flex", sm: "flex", md: "none" } }} />
+        <Menu
+          sx={{ mt: "45px", display: { xs: "flex", sm: "flex", md: "none" } }}
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          {user && <MenuItem>
+            <Grid container direction="column" alignItems="center" justifyContent="center"> 
+              <Grid item alignItems="center">
+                <Avatar alt={user.result.name} src={user.result.imageUrl}>{user?.result.name?.charAt(0)}</Avatar>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6">{user?.result.name}</Typography>
+              </Grid>
+            </Grid>
+          </MenuItem>}
+          <Divider />
+          <MenuItem component={Link} to="/Forms">Machining form</MenuItem>
+          <MenuItem component={Link} to="/LCADatas">Added Datas</MenuItem>
+          <Divider />
+          {user ? <MenuItem onClick={logoutUser}>Log out</MenuItem> : <MenuItem component={Link} to="/">Sign in</MenuItem>}
+        </Menu>
       </Toolbar>
     </AppBar>
   );

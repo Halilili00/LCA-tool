@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import postRouter from "./routes/postRouter.js"
+import adminsRouter from "./routes/adminsRouter.js"
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/posts", postRouter)
+app.use('/user', adminsRouter)
 
 const PORT = process.env.PORT || 5000;
 

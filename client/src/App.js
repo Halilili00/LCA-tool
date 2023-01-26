@@ -9,28 +9,36 @@ import SignIn from "./components/SignInForm";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { PrivateRoutes } from "./toolbox/PrivateRoutes";
 import { useDispatch, useSelector } from "react-redux";
-import { getData } from "./redux/actions/postActions";
+import { getAllData, getData } from "./redux/actions/postActions";
 import LCAPrintPage from "./components/LCAPrintPage";
 
 import { PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
 import { configuration } from "./configuration";
+import AdminSignForm from "./components/AdminSignForm";
+import OnlyAdminCanRoute from "./toolbox/OnlyAdminCanRoute";
 
 
 const pca = new PublicClientApplication(configuration)
 
 const App = () => {
-  const user = useSelector((state) => state.authReducer.authData)
+  const user = useSelector((state) => state.authReducer.authData);
   const dispatch = useDispatch();
+  //const location = useLocation();
 
   useEffect(() => {
     if (user?.token) {
-      dispatch(getData(user?.result._id))
+      if (user?.result.isAdmin === true) {
+        dispatch(getAllData())
+      } else {
+        dispatch(getData(user?.result._id))
+      }
     }
     console.log(user)
   }, [user?.result])
 
   console.log("app")
+  //console.log(location)
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_API_TOKEN}>
       <MsalProvider instance={pca}>
@@ -39,14 +47,20 @@ const App = () => {
             <Box sx={{ width: { xl: "1400px" } }} m="auto">
               <Navbar />
               <Routes>
+                <Route index element={<SignIn />} />
                 <Route element={<PrivateRoutes />}>
-                  <Route path="/" element={<Form />} exact />
-                  <Route path="/LCADatas" element={<LCAData />} />
-                  <Route path="/:id" element={<Form />} />
-                  <Route path="/LCADatas/:id" element={<LCAPrintPage />} />
+                  <Route path="Forms" element={<Form />} exact />
+                  <Route path="Forms/:id" element={<Form />} />
+                  <Route path="LCADatas" element={<LCAData />} />
+                  <Route path="LCADatas/:id" element={<LCAPrintPage />} />
                 </Route>
-                <Route path="/SignIn" element={<SignIn />} />
-                <Route path="/Admin" element={<SignIn />} />
+                <Route path="Admin" element={<AdminSignForm />} />
+                <Route element={<OnlyAdminCanRoute />}>
+                  <Route path="Admin">
+                    <Route path="LCADatas" element={<p>Coming soon</p>} />
+                  </Route>
+                </Route>
+                <Route path="*" element={<p>There's nothing here: 404!</p>} />
               </Routes>
             </Box>
           </div>

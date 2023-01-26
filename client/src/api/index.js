@@ -14,3 +14,8 @@ export const getData = (userID) => API.get(`/posts/${userID}`);
 export const createPost = (newPost) => API.post('/posts', newPost)
 export const updatePost = (postID, updatedPost) => API.patch(`/posts/${postID}`, updatedPost)
 export const deletePost = (postID) => API.delete(`/posts/${postID}`);
+
+export const getAllData = () => API.get(`/posts`);
+
+export const signUpAdmin = (signData) => API.post('/user/signup', signData);
+export const signInAdmin = (signData) => API.post('/user/signin', signData);

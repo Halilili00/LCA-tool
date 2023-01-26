@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import moment from 'moment';
 
 import { Button, CircularProgress, Container, Grid, InputAdornment, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
@@ -16,13 +16,13 @@ const LCAData = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [query, setQuery] = useState("");
-    /*const param = useParams();
 
-    useEffect(()=> {
-        if(param.id){
-            posts = posts.find()
-        }
-    },[])*/
+    const findPosts = useMemo(() => {
+        if(!posts.length) return []
+        return posts.filter(post => {
+            return post.partName.toLowerCase().includes(query.toLowerCase())
+        })
+    }, [query, posts])
 
 
     console.log(posts)
@@ -46,14 +46,14 @@ const LCAData = () => {
                     }}
                 />
             </Grid>
-            {!posts.length ? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' /> : posts.map((post) => (
+            {!findPosts.length? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' /> : findPosts.length ? findPosts.map((post) => (
                 <Grid container key={post._id} style={{ margin: "10px 0 15px 0", border: "5px double grey" }} direction="column">
                     <Grid item>
-                        <Grid container style={{ margin: "10px 0 15px 15px" }} direction="column" justifyContent="flex-start" alignItems="flex-start">
-                            <Grid item display="flex">
+                        <Grid container style={{ margin: "10px 0 15px 15px"}} direction="column" justifyContent="flex-start" alignItems="flex-start">
+                            <Grid item>
                                 <Button variant='contained' onClick={() => dispatch(deletePost(post._id))}>Delete</Button>
-                                <Button variant='contained' onClick={() => navigate(`/${post._id}`)}>Update</Button>
-                                <Button variant='contained' onClick={() => navigate(`/LCADatas/${post._id}`)} style={{position:"end"}}><PictureAsPdfIcon/></Button>
+                                <Button variant='contained' onClick={() => navigate(`/Forms/${post._id}`)}>Update</Button>
+                                <Button variant='contained' onClick={() => navigate(`/LCADatas/${post._id}`)}><PictureAsPdfIcon /></Button>
                             </Grid>
                             <Grid item>
                                 <Typography variant='h5'>Part name: {post.partName}</Typography>
@@ -136,7 +136,7 @@ const LCAData = () => {
                         <Chart chartType='Sankey' width="100%" height="500px" data={data} options={options} />
                     </Grid>
                 </Grid>
-            ))}
+            )) : <div>Nothing found</div>}
         </Container>
     )
 }

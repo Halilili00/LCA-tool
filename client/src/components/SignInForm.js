@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { signInGoogle, signInMicrosoft } from '../redux/actions/authActions';
 import { Button, Chip, Divider, TextField, Typography } from '@mui/material';
@@ -13,11 +13,15 @@ export default function SignIn({ setUser }) {
   const dispatch = useDispatch();
   const { instance } = useMsal();
 
+  //console.log(location)
+
   const handleLogin = async () => {
     instance.loginPopup({ scopes: ["email", "User.Read"] })
       .then(response => { return dispatch(signInMicrosoft(response, navigate)) })
       .catch(e => { console.log(e) })
   }
+
+
 
 
   return (

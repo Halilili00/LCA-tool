@@ -1,14 +1,14 @@
 import * as actions from "./actionsTypes"
 import * as api from "../../api/index.js";
 
-/*export const getData = () => async (dispatch) => {
+export const getAllData = () => async (dispatch) => {
     try {
-        const {data} = await api.getData();
+        const {data} = await api.getAllData();
         dispatch({type: actions.GET_POSTS, payload: data})
     } catch (error) {
         console.log(error)
     }
-}*/
+}
 
 export const getData = (userID) => async (dispatch) => {
     try {

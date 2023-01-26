@@ -1,13 +1,13 @@
 import Machining from "../models/machining.js"
 
-/*export const getMachiningPosts = async(req, res) => {
+export const getAllMachiningPosts = async(req, res) => {
     try {
         const posts = await Machining.find();
         res.status(200).json(posts)
     } catch (error) {
         res.status(404).json({message: error.message})
     }
-}*/
+}
 
 export const getMachiningPosts = async(req, res) => {
     const {userID} = req.params;
