@@ -4,9 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
-/src/hooks
-sankey.json
 configuration.js
+useAuth.js
 
 # testing
 /coverage

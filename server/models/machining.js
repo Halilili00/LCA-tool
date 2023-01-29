@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const machiningSchema = mongoose.Schema({ 
+    lcaID: String,
     creatorID: String,
     createdAt: Date,
     tempID: String,

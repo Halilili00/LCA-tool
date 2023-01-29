@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { signInGoogle, signInMicrosoft } from '../redux/actions/authActions';
-import { Button, Chip, Divider, TextField, Typography } from '@mui/material';
+import { Chip, Divider, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useMsal } from '@azure/msal-react';
 import ms_login_button from '../images/ms_login_button.png'
 
-export default function SignIn({ setUser }) {
+export default function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { instance } = useMsal();
@@ -20,9 +20,6 @@ export default function SignIn({ setUser }) {
       .then(response => { return dispatch(signInMicrosoft(response, navigate)) })
       .catch(e => { console.log(e) })
   }
-
-
-
 
   return (
     <Box style={{ padding: "50px", marginTop: "20px" }}>

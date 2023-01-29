@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, CircularProgress, Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import LCADataTable from '../toolbox/LCADataTable';
-import PieChart from '../toolbox/PieChart';
+import Charts from '../toolbox/Charts';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
@@ -92,18 +92,9 @@ const LCAPrintPage = () => {
                         </Table>
                     </TableContainer>
                 </Grid>
-                {/*<Grid item style={{backgroundColor:"white"}}>
-                        <PieChart post={post} />
-                    </Grid>
-                    <Grid item style={{backgroundColor:"white"}}>
-                        <SankeyChart post={post}/>
-            </Grid>*/}
-                <Grid item style={{ backgroundColor: "white" }}>
-                    <PieChart post={post} />
+                <Grid item style={{ backgroundColor: "white" , marginBottom: "10px" }}>
+                    <Charts post={post} />
                 </Grid>
-                {/*<Grid item style={{ backgroundColor: "white" }}>
-                <Chart chartType='Sankey' width="100%" height="500px" data={data} options={options} />
-        </Grid>*/}
             </Grid>
             }
         </div>

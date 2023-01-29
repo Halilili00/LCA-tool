@@ -87,6 +87,12 @@ const Form = () => {
     setFormData({ ...formData, [name]: { ...formData[name], file: { data: base64, name: fileName } } });
   };
 
+  const handleDeleteFile = async (e) => {
+    let { name } = e.target;
+    console.log(e.target)
+    setFormData({ ...formData, [name]: {...formData[name], file: ""}})
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (param.id) {
@@ -132,7 +138,7 @@ const Form = () => {
           <Grid item xs={4.1}>
             <TextField fullWidth label="Address" name="address" type="text" value={formData.productionSite.address} onChange={(e) => setFormData({ ...formData, productionSite: { ...formData.productionSite, address: e.target.value } })} />
           </Grid>
-          <Input label="Annual Production" unit="pcs/year" name='annualProduction' type='number' value={formData.annualProduction.value} handleChange={handleChange} handleFile={(e) => handleFile(e)} />
+          <Input label="Annual Production" unit="pcs/year" name='annualProduction' type='number' value={formData.annualProduction.value} handleChange={handleChange} handleFile={(e) => handleFile(e)} fileValue={formData.annualProduction.file} handleDeleteFile={(e) => handleDeleteFile(e)}/>
           <Input label="Steel" name='steel' unit="kg/pcs" type='number' value={formData.steel.value} handleChange={handleChange} handleFile={(e) => handleFile(e)} />
           <Input label="Removed steel" name='steelRemoved' unit="kg/pcs" type='number' value={formData.steelRemoved.value} handleChange={handleChange} handleFile={(e) => handleFile(e)} coefficinetValue={formData.steelRemoved.coefficinet} handleCoeffinetChange={handleCoeffinetChange} sum={formData.steelRemoved.value * formData.steelRemoved.coefficinet} />
           <Input label="Part weight" name="partWeight" type='number' unit="kg/pcs" value={formData.steel.value - formData.steelRemoved.value} readOnly handleFile={(e) => handleFile(e)} coefficinetValue={formData.partWeight.coefficinet} handleCoeffinetChange={handleCoeffinetChange} sum={(formData.steel.value - formData.steelRemoved.value) * formData.partWeight.coefficinet} />

@@ -17,6 +17,7 @@ import { MsalProvider } from "@azure/msal-react";
 import { configuration } from "./configuration";
 import AdminSignForm from "./components/AdminSignForm";
 import OnlyAdminCanRoute from "./toolbox/OnlyAdminCanRoute";
+import jwtDecode from "jwt-decode";
 
 
 const pca = new PublicClientApplication(configuration)
@@ -24,11 +25,13 @@ const pca = new PublicClientApplication(configuration)
 const App = () => {
   const user = useSelector((state) => state.authReducer.authData);
   const dispatch = useDispatch();
-  //const location = useLocation();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (user?.token) {
-      if (user?.result.isAdmin === true) {
+      const decodedToken = jwtDecode(user.token);
+      if (decodedToken.isAdmin === true) {
+        setIsAdmin(decodedToken.isAdmin)
         dispatch(getAllData())
       } else {
         dispatch(getData(user?.result._id))
@@ -37,8 +40,10 @@ const App = () => {
     console.log(user)
   }, [user?.result])
 
+
   console.log("app")
-  //console.log(location)
+  console.log(isAdmin)
+
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_API_TOKEN}>
       <MsalProvider instance={pca}>
@@ -57,7 +62,7 @@ const App = () => {
                 <Route path="Admin" element={<AdminSignForm />} />
                 <Route element={<OnlyAdminCanRoute />}>
                   <Route path="Admin">
-                    <Route path="LCADatas" element={<p>Coming soon</p>} />
+                    <Route path="LCADatas" element={<p>Coming soon...</p>} />
                   </Route>
                 </Route>
                 <Route path="*" element={<p>There's nothing here: 404!</p>} />

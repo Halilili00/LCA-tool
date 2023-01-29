@@ -6,8 +6,7 @@ import LCADataTable from '../toolbox/LCADataTable';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { deletePost, getData } from '../redux/actions/postActions';
-import PieChart from '../toolbox/PieChart';
-import { Chart } from "react-google-charts";
+import Charts from '../toolbox/Charts';
 import SearchIcon from '@mui/icons-material/Search';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
@@ -18,13 +17,13 @@ const LCAData = () => {
     const [query, setQuery] = useState("");
 
     const findPosts = useMemo(() => {
-        if(!posts.length) return []
+        if (!posts.length) return []
         return posts.filter(post => {
-            return post.partName.toLowerCase().includes(query.toLowerCase())
+            return post._id.toLowerCase().includes(query.toLowerCase())
         })
     }, [query, posts])
 
-
+    const ids = posts.map(p => p.creatorID)
     console.log(posts)
     return (
         <Container>
@@ -46,10 +45,10 @@ const LCAData = () => {
                     }}
                 />
             </Grid>
-            {!findPosts.length? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' /> : findPosts.length ? findPosts.map((post) => (
+            {!findPosts.length ? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' /> : findPosts.length ? findPosts.map((post) => (
                 <Grid container key={post._id} style={{ margin: "10px 0 15px 0", border: "5px double grey" }} direction="column">
                     <Grid item>
-                        <Grid container style={{ margin: "10px 0 15px 15px"}} direction="column" justifyContent="flex-start" alignItems="flex-start">
+                        <Grid container style={{ margin: "10px 0 15px 15px" }} direction="column" justifyContent="flex-start" alignItems="flex-start">
                             <Grid item>
                                 <Button variant='contained' onClick={() => dispatch(deletePost(post._id))}>Delete</Button>
                                 <Button variant='contained' onClick={() => navigate(`/Forms/${post._id}`)}>Update</Button>
@@ -123,17 +122,8 @@ const LCAData = () => {
                             </Table>
                         </TableContainer>
                     </Grid>
-                    {/*<Grid item style={{backgroundColor:"white"}}>
-                        <PieChart post={post} />
-                    </Grid>
-                    <Grid item style={{backgroundColor:"white"}}>
-                        <SankeyChart post={post}/>
-            </Grid>*/}
-                    <Grid item style={{ backgroundColor: "white" }}>
-                        <PieChart post={post} />
-                    </Grid>
-                    <Grid item style={{ backgroundColor: "white" }}>
-                        <Chart chartType='Sankey' width="100%" height="500px" data={data} options={options} />
+                    <Grid item style={{ backgroundColor: "white", marginBottom: "10px" }}>
+                        <Charts post={post} />
                     </Grid>
                 </Grid>
             )) : <div>Nothing found</div>}
@@ -153,6 +143,16 @@ export default LCAData
   ["Anchovies", 9], // Below limit.
 ];*/
 export const options = {};
+
+export const data2 = [
+    ["From", "To", "Weight"],
+    ["CO2 emission", "Steel", 1850],
+    ["CO2 emission", "Transport", 283],
+    ["CO2 emission", "Hit", 110],
+    ["Transport", "Track", 83],
+    ["Transport", "Ship", 200]
+
+]
 
 export const data = [
     ["From", "To", "Weight"],
