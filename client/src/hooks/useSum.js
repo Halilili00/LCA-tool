@@ -30,11 +30,16 @@ const useSum = (post) => {
     const chartCategorySums = categorySum.filter(cs => cs[1] > 0).sort(function (x, y) {
         return y[2] - x[2];
     })
+
     const chartSums = fixedSums.filter(fs => fs[2] > 0)
+
+    const totalSum = fixedSums.reduce(function(x,y){
+        return x[2]+y[2]
+    })
 
     console.log(fixedSums)
     return {
-        chartCategorySums, chartSums
+        chartCategorySums, chartSums, totalSum
     }
 }
 

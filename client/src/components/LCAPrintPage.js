@@ -3,20 +3,17 @@ import { Button, CircularProgress, Container, Grid, Paper, Table, TableBody, Tab
 import LCADataTable from '../toolbox/LCADataTable';
 import Charts from '../toolbox/Charts';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import { deletePost } from '../redux/actions/postActions';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 const LCAPrintPage = () => {
     const param = useParams();
     const post = useSelector((state) => (param.id ? state.postReducer.allPostDatas.find((post) => post._id === param.id) : null));
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (param.id && post !== 'undefined') {
-            const timer = setTimeout(() => window.print(), 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [])
     console.log(post)
     console.log(param)
     return (
@@ -24,6 +21,11 @@ const LCAPrintPage = () => {
             {post && <Grid container key={post._id} style={{ margin: "10px 0 15px 0", border: "5px double grey" }} direction="column">
                 <Grid item>
                     <Grid container style={{ margin: "10px 0 15px 15px" }} direction="column" justifyContent="flex-start" alignItems="flex-start">
+                    <Grid item>
+                                <Button variant='contained' onClick={() => dispatch(deletePost(post._id, navigate))}>Delete</Button>
+                                <Button variant='contained' onClick={() => navigate(`/Forms/${post._id}`)}>Update</Button>
+                                <Button variant='contained' onClick={() => window.print()}><PictureAsPdfIcon /></Button>
+                            </Grid>
                         <Grid item>
                             <Typography variant='h5'>Part name: {post.partName}</Typography>
                         </Grid>
@@ -46,7 +48,7 @@ const LCAPrintPage = () => {
                 </Grid>
                 <Grid item>
                     <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <Table aria-label="simple table">
                             <TableHead >
                                 <TableRow>
                                     <TableCell></TableCell>
