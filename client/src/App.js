@@ -26,19 +26,24 @@ const App = () => {
   const user = useSelector((state) => state.authReducer.authData);
   const dispatch = useDispatch();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [activeMode, setAciveMode] = useState("Admin");
 
   useEffect(() => {
     if (user?.token) {
       const decodedToken = jwtDecode(user.token);
       if (decodedToken.isAdmin === true) {
         setIsAdmin(decodedToken.isAdmin)
-        dispatch(getAllData())
+        if(activeMode === "Admin"){
+          dispatch(getAllData())
+        } else {
+          dispatch(getData(user?.result._id))
+        }
       } else {
         dispatch(getData(user?.result._id))
       }
     }
     console.log(user)
-  }, [user?.result])
+  }, [user?.result, activeMode])
 
 
   console.log("app")
@@ -50,7 +55,7 @@ const App = () => {
         <div className="App">
           <div className="App-header">
             <Box sx={{ width: { xl: "1400px" } }} m="auto">
-              <Navbar />
+              <Navbar activeMode={activeMode} setAciveMode={setAciveMode}/>
               <Routes>
                 <Route index element={<SignIn />} />
                 <Route element={<PrivateRoutes />}>

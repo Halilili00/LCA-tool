@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Avatar, Box, Button, Divider, Grid, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Box, Button, Divider, Grid, ListItemIcon, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import ArrowForwardTwoToneIcon from '@mui/icons-material/ArrowForwardTwoTone';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import decode from 'jwt-decode';
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/actions/authActions";
 import { useMsal } from "@azure/msal-react";
 
-const Navbar = () => {
+const Navbar = ({ activeMode, setAciveMode }) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   const { instance } = useMsal();
+  const usingModes = ["Admin", "User"]
 
 
   const logoutUser = () => {
@@ -88,7 +91,12 @@ const Navbar = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={logoutUser}>Log out</MenuItem>
+                  <MenuItem onClick={logoutUser}><ListItemIcon><LogoutOutlinedIcon /></ListItemIcon>Logout</MenuItem>
+                  {user?.result?.isAdmin && <Divider />}
+                  {user?.result?.isAdmin && usingModes.map((um, index) => (
+                    activeMode === um ? <MenuItem key={index} sx={{ color: "green" }}><ListItemIcon><ArrowForwardTwoToneIcon /></ListItemIcon>{um}</MenuItem> :
+                      <MenuItem key={index} onClick={() => setAciveMode(um)}><ListItemIcon></ListItemIcon>{um}</MenuItem>
+                  ))}
                 </Menu>
               </Box>
             </> :
@@ -115,7 +123,7 @@ const Navbar = () => {
           onClose={handleClose}
         >
           {user && <MenuItem>
-            <Grid container direction="column" alignItems="center" justifyContent="center"> 
+            <Grid container direction="column" alignItems="center" justifyContent="center">
               <Grid item alignItems="center">
                 <Avatar alt={user.result.name} src={user.result.imageUrl}>{user?.result.name?.charAt(0)}</Avatar>
               </Grid>
@@ -128,7 +136,13 @@ const Navbar = () => {
           <MenuItem component={Link} to="/Forms">Machining form</MenuItem>
           <MenuItem component={Link} to="/LCADatas">Added Datas</MenuItem>
           <Divider />
-          {user ? <MenuItem onClick={logoutUser}>Log out</MenuItem> : <MenuItem component={Link} to="/">Sign in</MenuItem>}
+          {user ? <MenuItem onClick={logoutUser}><ListItemIcon><LogoutOutlinedIcon /></ListItemIcon>Logout</MenuItem>
+            : <MenuItem component={Link} to="/">Sign in</MenuItem>}
+          {user?.result?.isAdmin && <Divider />}
+          {user?.result?.isAdmin && usingModes.map((um, index) => (
+            activeMode === um ? <MenuItem key={index} sx={{ color: "green" }}><ListItemIcon><ArrowForwardTwoToneIcon /></ListItemIcon>{um}</MenuItem> :
+              <MenuItem key={index} onClick={() => setAciveMode(um)}><ListItemIcon></ListItemIcon>{um}</MenuItem>
+          ))}
         </Menu>
       </Toolbar>
     </AppBar>

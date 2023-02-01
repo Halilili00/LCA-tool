@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { ButtonGroup, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Tooltip } from '@mui/material'
+import { ButtonGroup, IconButton, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TableSortLabel, Tooltip } from '@mui/material'
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
@@ -34,15 +34,32 @@ const DataTable = ({ findPosts }) => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [filterValue, setFilterValue] = useState({value: 0, comparator: ">="});
+    const [filterValue, setFilterValue] = useState({ value: 0, comparator: ">="});
+
+    const comparisonOperatorsHash = (comparator, a, b) => {
+        switch (comparator) {
+            case '<':
+                return a < b
+            case '>':
+                return a > b
+            case '<=':
+                return a <= b
+            case '>=':
+                return a >= b
+            case '=':
+                return a === b
+            default:
+                break;
+        }
+    };
 
     const filteredPosts = useMemo(() => {
         if (!findPosts.length) return []
         return findPosts.filter(post => {
-            if(typeof filterValue.value === "number" && filterValue.value>0){
-                return (post.steelRemoved.value * post.steelRemoved.coefficinet + (post.steel.value - post.steelRemoved.value) * post.partWeight.coefficinet + post.energyConsumption.value * post.machiningTime.value * post.machiningTime.coefficinet + (post.machiningLiquidConsumption.value / post.annualProduction.value) * post.machiningLiquidConsumption.coefficinet
-                + (post.hydraulicOilConsumption.value / post.annualProduction.value) * post.hydraulicOilConsumption.coefficinet + post.packagingPlastic.value * post.packagingPlastic.coefficinet + (post.oil.value / post.annualProduction.value) * post.oil.coefficinet + (post.electrycity.value / post.annualProduction.value) * post.electrycity.coefficinet
-                + ((40 / 100) * post.euro5?.value * post.euro5?.coefficinet * (post.steel.value / 2000)) + ((40 / 100) * post.euro6?.value * post.euro6?.coefficinet * (post.steel.value / 2000)) + ((40 / 100) * post.euro7?.value * post.euro7?.coefficinet * (post.steel.value / 2000)) + ((4000 / 100) * post.roro?.value * post.roro?.coefficinet * (post.steel.value / 2000000))).toFixed(2) >= filterValue.value
+            if (typeof filterValue.value === "number" && filterValue.value > 0) {
+                return comparisonOperatorsHash(filterValue.comparator, (post.steelRemoved.value * post.steelRemoved.coefficinet + (post.steel.value - post.steelRemoved.value) * post.partWeight.coefficinet + post.energyConsumption.value * post.machiningTime.value * post.machiningTime.coefficinet + (post.machiningLiquidConsumption.value / post.annualProduction.value) * post.machiningLiquidConsumption.coefficinet
+                    + (post.hydraulicOilConsumption.value / post.annualProduction.value) * post.hydraulicOilConsumption.coefficinet + post.packagingPlastic.value * post.packagingPlastic.coefficinet + (post.oil.value / post.annualProduction.value) * post.oil.coefficinet + (post.electrycity.value / post.annualProduction.value) * post.electrycity.coefficinet
+                    + ((40 / 100) * post.euro5?.value * post.euro5?.coefficinet * (post.steel.value / 2000)) + ((40 / 100) * post.euro6?.value * post.euro6?.coefficinet * (post.steel.value / 2000)) + ((40 / 100) * post.euro7?.value * post.euro7?.coefficinet * (post.steel.value / 2000)) + ((4000 / 100) * post.roro?.value * post.roro?.coefficinet * (post.steel.value / 2000000))).toFixed(2), filterValue.value)
             } else {
                 return post
             }
@@ -72,7 +89,7 @@ const DataTable = ({ findPosts }) => {
                         <StyledTableCell>Name of production site</StyledTableCell>
                         <StyledTableCell>Address</StyledTableCell>
                         <StyledTableCell>GHG emissions(CO2 eqv GHG kg)</StyledTableCell>
-                        <StyledTableCell><Filter filterValue={filterValue} setFilterValue={setFilterValue}/></StyledTableCell>
+                        <StyledTableCell align='right'><Filter filterValue={filterValue} setFilterValue={setFilterValue} /></StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

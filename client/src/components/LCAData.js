@@ -23,7 +23,7 @@ const LCAData = () => {
                 <TextField
                     style={{ backgroundColor: "whitesmoke", borderRadius: "20px", margin: "15px 0px 0px 0px" }}
                     type="search"
-                    label="Search with..."
+                    label="Search with LCAID..."
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     fullWidth
