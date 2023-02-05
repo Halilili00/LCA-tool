@@ -15,11 +15,11 @@ app.get("/", (req, res) => {
     res.send("Work")
 })
 
-app.use("/posts", postRouter)
-app.use('/user', adminsRouter)
+app.use("/api/posts", postRouter)
+app.use("/api/user" ,adminsRouter)
 
 const PORT = process.env.PORT || 5000;
-
-mongoose.connect(process.env.CONNECTION_URL)
+//mongoose.connect("mongodb://localhost:27017/test", {useNewUrlParser: true, useUnifiedTopology: true,}) // for deploying
+mongoose.connect(process.env.CONNECTION_URL) // for tesging when coding
 .then(() => app.listen(PORT, () => console.log(`Server is runing ${PORT}`)))
 .catch((error) => console.group(error.message));

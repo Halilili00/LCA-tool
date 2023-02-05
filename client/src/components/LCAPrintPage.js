@@ -48,7 +48,7 @@ const LCAPrintPage = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid item>
+                <Grid item style={{pageBreakAfter: "always"}}>
                     <TableContainer component={Paper}>
                         <Table aria-label="simple table">
                             <TableHead >
@@ -61,15 +61,24 @@ const LCAPrintPage = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
+                                <TableRow>
+                                    <TableCell style={{ fontSize: "1rem", fontWeight: "600" }}>Raw material:</TableCell>
+                                </TableRow>
                                 <LCADataTable rowName="Annual production volume of part" unit="pcs/year" value={post.annualProduction.value} file={post.annualProduction.file} />
                                 <LCADataTable rowName="Steel" unit="kg/pcs" value={post.steel.value} file={post.steel.file} />
                                 <LCADataTable rowName="Steel removed in machining" unit="kg/pcs" value={post.steelRemoved.value} coefficinet={post.steelRemoved.coefficinet} file={post.steelRemoved.file} sum={sums[0][2]} />
                                 <LCADataTable rowName="Part weight" unit="kg/pcs" value={post.steel.value - post.steelRemoved.value} coefficinet={post.partWeight.coefficinet} file={post.partWeight.file} sum={sums[1][2]} />
+                                <TableRow>
+                                    <TableCell style={{ fontSize: "1rem", fontWeight: "600" }}>Operations:</TableCell>
+                                </TableRow>
                                 <LCADataTable rowName="Energy consumption of machining" unit="kW" value={post.energyConsumption.value} file={post.energyConsumption.file} />
                                 <LCADataTable rowName="Machining time" unit="h" value={post.machiningTime.value} file={post.machiningTime.file} sum={sums[2][2]} />
                                 <LCADataTable rowName="Machining liquid consumption" unit="l/year" value={post.machiningLiquidConsumption.value} coefficinet={post.machiningLiquidConsumption.coefficinet} file={post.machiningLiquidConsumption.file} sum={sums[3][2]} />
                                 <LCADataTable rowName="Hydraulic oil consumption" unit="l/year" value={post.hydraulicOilConsumption.value} coefficinet={post.hydraulicOilConsumption.coefficinet} file={post.hydraulicOilConsumption.file} sum={sums[4][2]} />
                                 <LCADataTable rowName="Packaging plastic" unit="kg/pcs" value={post.packagingPlastic.value} coefficinet={post.packagingPlastic.coefficinet} file={post.packagingPlastic.file} sum={sums[5][2]} />
+                                <TableRow>
+                                    <TableCell style={{ fontSize: "1rem", fontWeight: "600" }}>Site heating:</TableCell>
+                                </TableRow>
                                 <LCADataTable rowName="Oil" unit="l/year" value={post.oil.value} coefficinet={post.oil.coefficinet} file={post.oil.file} sum={sums[6][2]} />
                                 <LCADataTable rowName="Electricity" unit="kWh" value={post.electrycity.value} coefficinet={post.electrycity.coefficinet} file={post.electrycity.file} sum={sums[7][2]} />
                                 <TableRow>

@@ -23,7 +23,7 @@ export const getMachiningPosts = async (req, res) => {
 
 export const createMachiningPost = async (req, res) => {
     const post = req.body;
-    let newId = await Counter.findOneAndUpdate({ _id: '63d4113b32a19c8613a442a5' }, { $inc: { machConter: 1 } }, { new: true })
+    let newId = await Counter.findOneAndUpdate({ _id: '63dfb6889513c9fcae1dd505' }, { $inc: { machConter: 1 } }, { new: true })
     const lcaID = lcaIDGenerator(newId)
     //console.log(lcaID)
     const newPost = new Machining({ ...post, creatorID: req.userId, createdAt: new Date().toISOString(), tempID: 'MAC-0001', lcaID: lcaID })

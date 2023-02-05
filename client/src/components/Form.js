@@ -167,7 +167,7 @@ const Form = () => {
           <Grid item xs={12} mt={4}>
             <Typography variant='h3'>Total sum is: {totalSum} CO2 eqv GHG kg</Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} style={{marginBottom: "20px"}}>
             <Button variant="contained" type='submit' fullWidth size='large'>Submit</Button>
           </Grid>
         </Grid>
