@@ -4,11 +4,15 @@ import initialStates from "./initialStates.js";
 const authReducer = (state = initialStates, action) => {
     switch (action.type) {
         case AUTH:
-            localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
-            return {...state, authData: action.data}
+            if(action.data){
+                localStorage.setItem("profile", JSON.stringify({ ...action?.data }));
+                return {...state, authData: action.data, error: null}
+            } else {
+                return {...state, authData: action.data, error: action.error ? action.error?.response?.data?.message : null}
+            }
         case LOGOUT:
             localStorage.clear();
-            return {...state, authData: null};
+            return {...state, authData: null, error: null};
         default:
             return state;
     }

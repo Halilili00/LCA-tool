@@ -37,7 +37,8 @@ export const signInAdmin = (signData, navigate) => async(dispatch) => {
         dispatch({type: actions.AUTH, data})
         navigate("/Forms")
     } catch (error) {
-        console.log(error)
+        console.log(error.response.data.message)
+        dispatch({type: actions.AUTH, error})
     }
 }
 

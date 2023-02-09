@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react'
-import { Badge, Button, IconButton, Menu, MenuItem, NativeSelect, TextField, Tooltip } from '@mui/material'
+import { Badge, Button, IconButton, Menu, MenuItem, NativeSelect, Select, TextField, Tooltip } from '@mui/material'
 import FilterListTwoToneIcon from '@mui/icons-material/FilterListTwoTone';
 
 const Filter = ({ filterValue, setFilterValue }) => {
@@ -76,14 +76,14 @@ const Filter = ({ filterValue, setFilterValue }) => {
                         ))}
                     </NativeSelect>
                     */}
-                    <NativeSelect onChange={handelColumnsOption}>
-                        <option >{columns[0].lableName}</option>
-                    </NativeSelect>
-                    <NativeSelect onChange={handelComparisatorOption} style={{ margin: "0 10px 0 10px" }}>
+                    <Select value={columns[0].lableName} variant='standard' onChange={handelColumnsOption}>
+                        <MenuItem value={columns[0].lableName}>{columns[0].lableName}</MenuItem>
+                    </Select>
+                    <Select value={filterValue.comparator} variant='standard' onChange={handelComparisatorOption} style={{ margin: "0 10px 0 10px" }}>
                         {comparators.map((comp, index) => (
-                            <option key={index}>{comp}</option>
+                            <MenuItem value={comp} key={index}>{comp}</MenuItem>
                         ))}
-                    </NativeSelect>
+                    </Select>
                     <TextField label={inputValue} type={columns.find(c => c.lableName === inputValue).type} value={filterValue.value} onChange={handleChange} />
                 </MenuItem>
                 {!isFilterOnline && <MenuItem style={{display: "flex", justifyContent: "end" }}><Button variant='contained' color='inherit' onClick={resetFilter}>Reset filter</Button></MenuItem>}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
-import { useDispatch } from 'react-redux';
+import { Button, Container, FormHelperText, Grid, Paper, TextField, Typography } from "@mui/material";
+import { useDispatch, useSelector } from 'react-redux';
 import { signInAdmin } from '../redux/actions/authActions';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +12,7 @@ const AdminSignForm = () => {
     });
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const error = useSelector((state) => state.authReducer.error)
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -40,14 +41,18 @@ const AdminSignForm = () => {
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <TextField type="text" name="name" value={signData.name} label="Frist Name and Last Name" variant="outlined" required fullWidth autoFocus onChange={handleChange}/>
+                            <TextField type="text" name="name" value={signData.name} label="First Name and Last Name" variant="outlined" required fullWidth autoFocus onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField type="email" name='email'  value={signData.email} label="Email Address" variant="outlined" required fullWidth onChange={handleChange}/>
+                            <TextField type="email" name='email' value={signData.email} label="Email Address" variant="outlined" required fullWidth onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField type="password" name='password'  value={signData.password} label="Password" variant="outlined" required autoComplete="false" fullWidth onChange={handleChange}/>
+                            <TextField type="password" name='password' value={signData.password} label="Password" variant="outlined" required autoComplete="false" fullWidth onChange={handleChange} />
                         </Grid>
+                        {error && <Grid item xs={12} sx={{ display: "flex", justifyContent: "center"}}>
+                            <FormHelperText sx={{color: "red"}}>{error}</FormHelperText>
+                        </Grid>
+                        }
                         <Grid item xs={12}>
                             <Button type="submit" variant="contained" fullWidth>Sign In</Button>
                         </Grid>

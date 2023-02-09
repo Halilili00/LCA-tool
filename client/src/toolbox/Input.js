@@ -50,11 +50,11 @@ const Input = ({ name, type, label, value, handleChange, unit, handleFile, readO
           />}
 
       </Grid>
-      {handleCoeffinetChange ? <>
-        <Grid item xs={0.3} style={{ marginTop: "20px" }}>
+      {handleCoeffinetChange ? <Grid container item xs={1.5} direction="row">
+        <Grid item xs={3} style={{ marginTop: "20px" }}>
           <Typography variant="body2">X</Typography>
         </Grid>
-        <Grid item xs={0.9}>
+        <Grid item xs={9}>
           <TextField
             label={"Cofficinet"}
             name={name}
@@ -67,19 +67,19 @@ const Input = ({ name, type, label, value, handleChange, unit, handleFile, readO
               step: 0.01
             }}
           />
-        </Grid></>
+        </Grid></Grid>
         :
-        <Grid item xs={1.2}>
+        <Grid item xs={1.5}>
           <Typography />
         </Grid>}
-      {sum ? <Grid item xs={1.6} style={{ marginTop: "20px" }}>
+      {sum ? <Grid item xs={2} style={{ marginTop: "20px" }}>
         <Typography variant="body1">= {sum.toFixed(2)} CO2 eqv GHG kg</Typography>
-      </Grid> : <Grid item xs={1.6}>
+      </Grid> : <Grid item xs={2}>
         <Typography />
       </Grid>}
-      {handleFile ? <Grid item xs={3.5}>
+      {handleFile ? <Grid item xs={3}>
         {fileValue ? <><Button onClick={() => downloadPDF(fileValue.data, fileValue.name)}>{fileValue.name}</Button></> : <TextField type="file" name={name} onChange={handleFile} />}
-      </Grid> : <Grid item xs={3.5}>
+      </Grid> : <Grid item xs={3}>
         <Typography />
       </Grid>}
     </>

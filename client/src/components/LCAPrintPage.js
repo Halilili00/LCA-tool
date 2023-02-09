@@ -8,13 +8,25 @@ import moment from 'moment';
 import { deletePost } from '../redux/actions/postActions';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import useSum from '../hooks/useSum';
+import { useDialogAlert } from '../hooks/useDialogAlert';
 
 const LCAPrintPage = () => {
     const param = useParams();
-    const post = useSelector((state) => (param.id ? state.postReducer.allPostDatas.find((post) => post._id === param.id) : null));
+    const post = useSelector((state) => (param.id ? state.postReducer.posts.find((post) => post._id === param.id) : null));
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { totalSum, sums } = useSum(post);
+    const { handleOpenDialog } = useDialogAlert();
+
+    const handleDeletePost = (id) => {
+        handleOpenDialog({
+            title: "You want to delte data?",
+            succes: "Data is deleted",
+            buttons: [
+              { lable: "Delte data", navigatePage: "/LCADatas", onConfirm: () => {dispatch(deletePost(id))}},
+            ]
+          })
+    }
 
     console.log(post)
     console.log(sums)
@@ -24,7 +36,7 @@ const LCAPrintPage = () => {
                 <Grid item>
                     <Grid container style={{ margin: "10px 0 15px 15px" }} direction="column" justifyContent="flex-start" alignItems="flex-start">
                         <Grid item>
-                            <Button variant='contained' onClick={() => dispatch(deletePost(post._id, navigate))}>Delete</Button>
+                            <Button variant='contained' onClick={() => handleDeletePost(post._id)}>Delete</Button>
                             <Button variant='contained' onClick={() => navigate(`/Forms/${post._id}`)}>Update</Button>
                             <Button variant='contained' onClick={() => window.print()}><PictureAsPdfIcon /></Button>
                         </Grid>

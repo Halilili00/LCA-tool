@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "./App.css"
 import Form from "./components/Form";
 import LCAData from "./components/LCAData";
@@ -18,6 +18,7 @@ import { configuration } from "./configuration";
 import AdminSignForm from "./components/AdminSignForm";
 import OnlyAdminCanRoute from "./toolbox/OnlyAdminCanRoute";
 import jwtDecode from "jwt-decode";
+import { Alertprovider } from "./hooks/useDialogAlert";
 
 
 const pca = new PublicClientApplication(configuration)
@@ -33,13 +34,13 @@ const App = () => {
       const decodedToken = jwtDecode(user.token);
       if (decodedToken.isAdmin === true) {
         setIsAdmin(decodedToken.isAdmin)
-        if(activeMode === "Admin"){
+        if (activeMode === "Admin") {
           dispatch(getAllData())
         } else {
-          dispatch(getData(user?.result._id))
+          dispatch(getData(decodedToken.sub))
         }
       } else {
-        dispatch(getData(user?.result._id))
+        dispatch(getData(decodedToken.sub))
       }
     }
     console.log(user)
@@ -55,23 +56,25 @@ const App = () => {
         <div className="App">
           <div className="App-header">
             <Box sx={{ width: { xl: "1400px" } }} m="auto">
-              <Navbar activeMode={activeMode} setAciveMode={setAciveMode}/>
-              <Routes>
-                <Route index element={<SignIn />} />
-                <Route element={<PrivateRoutes />}>
-                  <Route path="Forms" element={<Form />} exact />
-                  <Route path="Forms/:id" element={<Form />} />
-                  <Route path="LCADatas" element={<LCAData />} />
-                  <Route path="LCADatas/:id" element={<LCAPrintPage />} />
-                </Route>
-                <Route path="Admin" element={<AdminSignForm />} />
-                <Route element={<OnlyAdminCanRoute />}>
-                  <Route path="Admin">
-                    <Route path="LCADatas" element={<p>Coming soon...</p>} />
+              <Alertprovider>
+                <Navbar activeMode={activeMode} setAciveMode={setAciveMode} />
+                <Routes>
+                  <Route index element={<SignIn />} />
+                  <Route element={<PrivateRoutes />}>
+                    <Route path="Forms" element={<Form />} exact />
+                    <Route path="Forms/:id" element={<Form />} />
+                    <Route path="LCADatas" element={<LCAData />} />
+                    <Route path="LCADatas/:id" element={<LCAPrintPage />} />
                   </Route>
-                </Route>
-                <Route path="*" element={<p>There's nothing here: 404!</p>} />
-              </Routes>
+                  <Route path="Admin" element={<AdminSignForm />} />
+                  <Route element={<OnlyAdminCanRoute />}>
+                    <Route path="Admin">
+                      <Route path="LCADatas" element={<p>Coming soon...</p>} />
+                    </Route>
+                  </Route>
+                  <Route path="*" element={<p>There's nothing here: 404!</p>} />
+                </Routes>
+              </Alertprovider>
             </Box>
           </div>
         </div>

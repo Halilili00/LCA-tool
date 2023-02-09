@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Filter from '../toolbox/Filter';
 import { useDispatch } from 'react-redux';
 import { deletePost } from '../redux/actions/postActions';
+import { useDialogAlert } from '../hooks/useDialogAlert';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -35,6 +36,7 @@ const DataTable = ({ findPosts }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [filterValue, setFilterValue] = useState({ value: 0, comparator: ">="});
+    const { handleOpenDialog } = useDialogAlert();
 
     const comparisonOperatorsHash = (comparator, a, b) => {
         switch (comparator) {
@@ -75,6 +77,16 @@ const DataTable = ({ findPosts }) => {
         setPage(0);
     };
 
+    const handleDeletePost = (id) => {
+        handleOpenDialog({
+            title: "You want to delte data?",
+            succes: "Data is deleted",
+            buttons: [
+              { lable: "Delte data", onConfirm: () => {dispatch(deletePost(id))}},
+            ]
+          })
+    }
+
     console.log(filteredPosts)
     return (
         <TableContainer component={Paper}>
@@ -113,7 +125,7 @@ const DataTable = ({ findPosts }) => {
                                             <IconButton color='inherit' onClick={() => navigate(`/Forms/${post._id}`)}><EditRoundedIcon /></IconButton>
                                         </Tooltip>
                                         <Tooltip title="Detele">
-                                            <IconButton color='inherit' onClick={() => dispatch(deletePost(post._id))}><RemoveCircleRoundedIcon /></IconButton>
+                                            <IconButton color='inherit' onClick={() => handleDeletePost(post._id)}><RemoveCircleRoundedIcon /></IconButton>
                                         </Tooltip>
                                         <Tooltip title="Go details">
                                             <IconButton color='inherit' onClick={() => navigate(`/LCADatas/${post._id}`)}><MoreHorizOutlinedIcon /></IconButton>
@@ -136,7 +148,6 @@ const DataTable = ({ findPosts }) => {
                                 inputProps: {
                                     'aria-label': 'rows per page',
                                 },
-                                native: true,
                             }}
                         />
                     </TableRow>

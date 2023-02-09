@@ -1,6 +1,6 @@
 const states = {
     authData: JSON.parse(localStorage?.getItem("profile")),
-    allPostDatas:[],
+    allPostDatas:{posts: [], loading: true, error: null},
 }
 
 export default states;

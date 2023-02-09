@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import DataTable from './DataTable';
 
 const LCAData = () => {
-    const posts = useSelector((state) => state.postReducer.allPostDatas);
+    const { posts, loading, error } = useSelector((state) => state.postReducer);
     const [query, setQuery] = useState("");
 
     const findPosts = useMemo(() => {
@@ -15,6 +15,8 @@ const LCAData = () => {
         })
     }, [query, posts])
 
+    console.log(loading)
+    console.log(posts)
     console.log(findPosts)
     return (
         <Grid container direction="column">
@@ -37,7 +39,7 @@ const LCAData = () => {
                 />
             </Grid>
             <Grid item mb={1}>
-                {!findPosts.length ? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' />
+                {loading ? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' />
                     : findPosts.length ? <DataTable findPosts={findPosts} /> : <div>Nothing found</div>}
             </Grid>
         </Grid>
