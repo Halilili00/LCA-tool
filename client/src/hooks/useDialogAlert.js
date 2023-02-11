@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Alert, Button, Dialog, DialogActions, DialogTitle, Snackbar } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const AlertContext = createContext();
 
@@ -8,6 +9,7 @@ export const Alertprovider = ({ children }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [message, setMessage] = useState({ title: "", succes: "", buttons: [{ lable: "Cancel", navigatePage: "" }] });
+    const { loading, error } = useSelector((state) => state.postReducer);
     const navigate = useNavigate();
 
     const handleOpenSnackbar = () => {
@@ -40,6 +42,7 @@ export const Alertprovider = ({ children }) => {
         }
     }
 
+    console.log(error)
     return (
         <AlertContext.Provider value={{ handleOpenDialog }}>
             {children}
@@ -49,21 +52,22 @@ export const Alertprovider = ({ children }) => {
                 onClose={handleCloseDialog}
             >
                 <DialogTitle textAlign="center">{message.title}</DialogTitle>
-                <DialogActions>
+                <DialogActions style={{justifyContent: "center"}}>
                     {message.buttons.map((button, index) => (
                         <Button key={index} onClick={() => handleOk(button.onConfirm, button.navigatePage)} variant='contained'>{button.lable}</Button>
                     ))}
                     <Button variant='contained' onClick={() => handleCancel()}>Cancel</Button>
                 </DialogActions>
             </Dialog>}
-            {snackbarOpen && <Snackbar
+            {(!loading && snackbarOpen) && <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={3000}
                 onClose={handleCloseSnackBar}
-                anchorOrigin={{vertical: "top", horizontal: "right"}}   
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
             >
-                <Alert severity='success'>{message.succes}</Alert>
-            </Snackbar>}
+                {error ? <Alert severity='error'>{error?.message}</Alert> : <Alert severity='success'>{message.succes}</Alert>}
+            </Snackbar>
+            }
         </AlertContext.Provider>
     )
 }

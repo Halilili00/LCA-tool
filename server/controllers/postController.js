@@ -3,7 +3,7 @@ import Counter from "../models/counter.js"
 
 export const getAllMachiningPosts = async (req, res) => {
     try {
-        const posts = await Machining.find();
+        const posts = await Machining.find().sort({createdAt: -1}); //newest to old
         res.status(200).json(posts)
     } catch (error) {
         res.status(404).json({ message: error.message })
@@ -14,7 +14,7 @@ export const getMachiningPosts = async (req, res) => {
     const { userID } = req.params;
 
     try {
-        const posts = await Machining.find({ creatorID: { $eq: userID } });
+        const posts = await Machining.find({ creatorID: { $eq: userID } }).sort({createdAt: -1});
         res.status(200).json(posts)
     } catch (error) {
         res.status(404).json({ message: error.message })

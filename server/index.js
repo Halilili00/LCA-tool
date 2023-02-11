@@ -8,7 +8,7 @@ import adminsRouter from "./routes/adminsRouter.js"
 dotenv.config();
 const app = express();
 
-app.use(express.json({limit: "30mb"}));
+app.use(express.json({limit: "100mb"}));
 app.use(cors());
 
 app.get("/", (req, res) => {

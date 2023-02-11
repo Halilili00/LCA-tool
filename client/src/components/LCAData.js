@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { CircularProgress, Grid, InputAdornment, TextField, Typography } from '@mui/material'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import SearchIcon from '@mui/icons-material/Search';
 import DataTable from './DataTable';
 

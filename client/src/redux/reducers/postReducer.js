@@ -1,20 +1,20 @@
-import { GET_POSTS, CREATE_POST, UPDATE_POST, DELETE_POST } from "../actions/actionsTypes.js";
+import { GET_POSTS, CREATE_POST, UPDATE_POST, DELETE_POST, ERROR, LOADING } from "../actions/actionsTypes.js";
 import initialStates from "./initialStates.js";
 
 const postReducer = (state = initialStates.allPostDatas, action) => {
     switch (action.type) {
         case GET_POSTS:
-            if (state.error === null) {
-                return { ...state.allPostDatas, posts: action.payload, loading: false, error: null }
-            } else {
-                return { ...state.allPostDatas, posts: [], loading: false, error: action.payload }
-            }
+            return { ...state.allPostDatas, posts: action.payload, loading: false, error: null }
         case CREATE_POST:
-            return { state, posts: [...state.posts, action.payload] };
+            return { state, posts: [action.payload, ...state.posts], loading: false, error: null };
         case UPDATE_POST:
-            return { state, posts: state.posts.map(post => (post._id === action.payload._id ? action.payload : post)) }
+            return { state, posts: state.posts.map(post => (post._id === action.payload._id ? action.payload : post)), loading: false, error: null }
         case DELETE_POST:
-            return { state, posts: state.posts.filter(post => post._id !== action.payload) }
+            return { state, posts: state.posts.filter(post => post._id !== action.payload), loading: false, error: null }
+        case ERROR:
+            return { ...state, error: action.payload, loading: false }
+        case LOADING:
+            return { ...state, loading: action.payload}
         default:
             return state;
     }

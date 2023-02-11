@@ -29,8 +29,10 @@ export const auth = async (req, res, next) => {
     }
 }
 
-export const isAdmin = (req, res, next) => {
+export const isAdmin = async (req, res, next) => {
     const { authorization } = req.headers
+
+    console.log(req.body)
 
     if (!authorization) {
         return res.status(401).json({ error: 'Authorization token required' })

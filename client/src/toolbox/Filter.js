@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react'
-import { Badge, Button, IconButton, Menu, MenuItem, NativeSelect, Select, TextField, Tooltip } from '@mui/material'
+import { Badge, Button, IconButton, Menu, MenuItem, Select, TextField, Tooltip } from '@mui/material'
 import FilterListTwoToneIcon from '@mui/icons-material/FilterListTwoTone';
 
 const Filter = ({ filterValue, setFilterValue }) => {

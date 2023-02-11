@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Grid, InputAdornment, TextField, Typography } from "@mui/material";
-import ClearIcon from '@mui/icons-material/Clear';
+import { Button, ButtonGroup, Grid, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
+import DownloadIcon from '@mui/icons-material/Download';
 
 const Input = ({ name, type, label, value, handleChange, unit, handleFile, readOnly, coefficinetValue, handleCoeffinetChange, sum, fileValue, handleDeleteFile }) => {
   const downloadPDF = (data, filename) => {
@@ -78,7 +78,17 @@ const Input = ({ name, type, label, value, handleChange, unit, handleFile, readO
         <Typography />
       </Grid>}
       {handleFile ? <Grid item xs={3}>
-        {fileValue ? <><Button onClick={() => downloadPDF(fileValue.data, fileValue.name)}>{fileValue.name}</Button></> : <TextField type="file" name={name} onChange={handleFile} />}
+        {fileValue ?
+          <ButtonGroup>
+            <Tooltip title="Download file">
+              <Button variant="outlined" onClick={() => downloadPDF(fileValue.data, fileValue.name)} endIcon={<DownloadIcon/>}>{fileValue.name.length > 27 ? `${fileValue.name.split("").splice(0,24).join("")}...` : fileValue.name}</Button>
+            </Tooltip>
+            <Tooltip title="Delte file" >
+              <Button variant='outlined' name={name} onClick={handleDeleteFile}>X</Button>
+            </Tooltip>
+          </ButtonGroup>
+          :
+          <TextField type="file" name={name} onChange={handleFile} />}
       </Grid> : <Grid item xs={3}>
         <Typography />
       </Grid>}
