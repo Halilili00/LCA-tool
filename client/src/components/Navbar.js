@@ -51,15 +51,23 @@ const Navbar = ({ activeMode, setAciveMode }) => {
   };
 
   return (
-    <AppBar component="nav" position="static" sx={{ backgroundColor: "#282c34" }}>
+    <AppBar component="nav" position="static" sx={{
+      backgroundColor: "#282c34", "@media print": {
+        "&":
+          { display: "none"}
+      }
+    }}>
       <Toolbar>
         <Typography
           variant="h3"
+          component={Link}
+          to="/LCADatas"
+          style={{ textDecoration: "none", color: "white" }}
           sx={{ flexGrow: 1, display: "flex", justifyContent: "flex-start" }}
         >
-          LCA tool
+          LCA Tool
         </Typography>
-        <Box sx={{ display: { xs: "none", sm: "none", md: "flex" } }}>
+        <Box sx={{ flexGrow: 0, display: { xs: "none", sm: "none", md: "flex" } }}>
           <Button component={Link} variant="h4" to="/LCADatas" sx={{ color: "#fff" }}>
             Added Datas
           </Button>
@@ -105,9 +113,11 @@ const Navbar = ({ activeMode, setAciveMode }) => {
             </Button>
           }
         </Box>
-        <MenuOutlinedIcon onClick={handleMenu} sx={{ display: { xs: "flex", sm: "flex", md: "none" } }} />
+        <Box sx={{ flexGrow: 0, display: { xs: "flex", sm: "flex", md: "none" } }}>
+          <MenuOutlinedIcon onClick={handleMenu} />
+        </Box>
         <Menu
-          sx={{ mt: "45px", display: { xs: "flex", sm: "flex", md: "none" } }}
+          sx={{ mt: "25px", display: { xs: "flex", sm: "flex", md: "none" } }}
           id="menu-appbar"
           anchorEl={anchorEl}
           anchorOrigin={{
@@ -144,6 +154,7 @@ const Navbar = ({ activeMode, setAciveMode }) => {
               <MenuItem key={index} onClick={() => setAciveMode(um)}><ListItemIcon></ListItemIcon>{um}</MenuItem>
           ))}
         </Menu>
+
       </Toolbar>
     </AppBar>
   );

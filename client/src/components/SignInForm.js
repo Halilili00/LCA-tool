@@ -22,7 +22,7 @@ export default function SignIn() {
   }
 
   return (
-    <Box style={{ padding: "50px", marginTop: "20px" }}>
+    <Box sx={{ padding: "50px", background:"#222B36"}}>
       <Typography variant='h3'>Welcome to LCA tool</Typography>
       <Typography variant='h5'>Please sign in to continue</Typography>
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "2%", marginBottom: "1%" }}>

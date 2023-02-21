@@ -9,6 +9,7 @@ import Filter from '../toolbox/Filter';
 import { useDispatch } from 'react-redux';
 import { deletePost } from '../redux/actions/postActions';
 import { useDialogAlert } from '../hooks/useDialogAlert';
+import useCalculateSum from '../hooks/useCalculateSum';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -35,8 +36,10 @@ const DataTable = ({ findPosts }) => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [filterValue, setFilterValue] = useState({ value: 0, comparator: ">="});
+    const [filterValue, setFilterValue] = useState({ value: 0, comparator: ">=" });
     const { handleOpenDialog } = useDialogAlert();
+    const [orderDirection, setOrderDirection] = useState("asc");
+    const { calculateSum } = useCalculateSum();
 
     const comparisonOperatorsHash = (comparator, a, b) => {
         switch (comparator) {
@@ -55,18 +58,35 @@ const DataTable = ({ findPosts }) => {
         }
     };
 
+    const sortArray = (arr, orderBy) => {
+        switch (orderBy) {
+            case "asc":
+            default:
+                return arr.sort((a, b) =>
+                    calculateSum(a) - calculateSum(b)
+                );
+            case "desc":
+                return arr.sort((a, b) =>
+                    calculateSum(b) - calculateSum(a)
+                );
+        }
+    };
+
+    const handleSortRequest = () => {
+        sortArray(findPosts, orderDirection);
+        setOrderDirection(orderDirection === "asc" ? "desc" : "asc");
+    };
+
     const filteredPosts = useMemo(() => {
         if (!findPosts.length) return []
         return findPosts.filter(post => {
             if (typeof filterValue.value === "number" && filterValue.value > 0) {
-                return comparisonOperatorsHash(filterValue.comparator, (post.steelRemoved.value * post.steelRemoved.coefficinet + (post.steel.value - post.steelRemoved.value) * post.partWeight.coefficinet + post.energyConsumption.value * post.machiningTime.value * post.machiningTime.coefficinet + (post.machiningLiquidConsumption.value / post.annualProduction.value) * post.machiningLiquidConsumption.coefficinet
-                    + (post.hydraulicOilConsumption.value / post.annualProduction.value) * post.hydraulicOilConsumption.coefficinet + post.packagingPlastic.value * post.packagingPlastic.coefficinet + (post.oil.value / post.annualProduction.value) * post.oil.coefficinet + (post.electrycity.value / post.annualProduction.value) * post.electrycity.coefficinet
-                    + ((40 / 100) * post.euro5?.value * post.euro5?.coefficinet * (post.steel.value / 2000)) + ((40 / 100) * post.euro6?.value * post.euro6?.coefficinet * (post.steel.value / 2000)) + ((40 / 100) * post.euro7?.value * post.euro7?.coefficinet * (post.steel.value / 2000)) + ((4000 / 100) * post.roro?.value * post.roro?.coefficinet * (post.steel.value / 2000000))).toFixed(2), filterValue.value)
+                return comparisonOperatorsHash(filterValue.comparator, calculateSum(post), filterValue.value)
             } else {
                 return post
             }
         })
-    }, [filterValue, findPosts])
+    }, [filterValue, findPosts, orderDirection])
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -82,15 +102,16 @@ const DataTable = ({ findPosts }) => {
             title: "You want to delte data?",
             succes: "Data is deleted",
             buttons: [
-              { lable: "Delte data", onConfirm: () => {dispatch(deletePost(id))}},
+                { lable: "Delte data", onConfirm: () => { dispatch(deletePost(id)) } },
             ]
-          })
+        })
     }
 
     console.log(filteredPosts)
+    console.log(calculateSum(filteredPosts[0]))
     return (
         <TableContainer component={Paper}>
-            <Table>
+            <Table sx={{ minWidth: 700 }} aria-label="custom pagination table">
                 <TableHead>
                     <TableRow>
                         <StyledTableCell>LCAID</StyledTableCell>
@@ -100,7 +121,14 @@ const DataTable = ({ findPosts }) => {
                         <StyledTableCell>Valid date</StyledTableCell>
                         <StyledTableCell>Name of production site</StyledTableCell>
                         <StyledTableCell>Address</StyledTableCell>
-                        <StyledTableCell>GHG emissions(CO2 eqv GHG kg)</StyledTableCell>
+                        <StyledTableCell onClick={handleSortRequest} sortDirection={orderDirection}>
+                            <TableSortLabel
+                                sx={{ '&.MuiTableSortLabel-root': { color: 'white' }, '& .MuiTableSortLabel-icon': { color: 'white !important', } }}
+                                direction={orderDirection}
+                            >
+                                GHG emissions(CO2 eqv GHG kg)
+                            </TableSortLabel>
+                        </StyledTableCell>
                         <StyledTableCell align='right'><Filter filterValue={filterValue} setFilterValue={setFilterValue} /></StyledTableCell>
                     </TableRow>
                 </TableHead>
@@ -116,9 +144,7 @@ const DataTable = ({ findPosts }) => {
                                 <StyledTableCell>{(post.validDate?.start && post.validDate.start !== null) && moment(post.validDate.start).format("DD/MM/YYYY")} - {(post.validDate?.end && post.validDate.end !== null) && moment(post.validDate.end).format("DD/MM/YYYY")}</StyledTableCell>
                                 <StyledTableCell>{post.productionSite?.factoryName}</StyledTableCell>
                                 <StyledTableCell>{post.productionSite?.address}</StyledTableCell>
-                                <StyledTableCell>{(post.steelRemoved.value * post.steelRemoved.coefficinet + (post.steel.value - post.steelRemoved.value) * post.partWeight.coefficinet + post.energyConsumption.value * post.machiningTime.value * post.machiningTime.coefficinet + (post.machiningLiquidConsumption.value / post.annualProduction.value) * post.machiningLiquidConsumption.coefficinet
-                                    + (post.hydraulicOilConsumption.value / post.annualProduction.value) * post.hydraulicOilConsumption.coefficinet + post.packagingPlastic.value * post.packagingPlastic.coefficinet + (post.oil.value / post.annualProduction.value) * post.oil.coefficinet + (post.electrycity.value / post.annualProduction.value) * post.electrycity.coefficinet
-                                    + ((40 / 100) * post.euro5?.value * post.euro5?.coefficinet * (post.steel.value / 2000)) + ((40 / 100) * post.euro6?.value * post.euro6?.coefficinet * (post.steel.value / 2000)) + ((40 / 100) * post.euro7?.value * post.euro7?.coefficinet * (post.steel.value / 2000)) + ((4000 / 100) * post.roro?.value * post.roro?.coefficinet * (post.steel.value / 2000000))).toFixed(2)}</StyledTableCell>
+                                <StyledTableCell align='right'>{calculateSum(post)}</StyledTableCell>
                                 <StyledTableCell>
                                     <ButtonGroup >
                                         <Tooltip title="Update">

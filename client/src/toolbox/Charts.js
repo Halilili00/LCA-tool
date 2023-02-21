@@ -69,10 +69,10 @@ const PieChart = ({ post }) => {
     return (
         <>{sum > 0 &&
             <Grid container direction="column">
-                <Grid item style={{pageBreakAfter: "always"}}>
-                    <Chart chartType='PieChart' data={pieData} options={options2} width="100%" height="400px" />
+                <Grid item style={{ pageBreakAfter: "always" }}>
+                    <Chart chartType='PieChart' width="100%" height="400px" data={pieData} options={options2} />
                 </Grid>
-                <Grid item style={{ marginBottom: "20px"}}>
+                <Grid item style={{ marginBottom: "20px" }}>
                     <Chart chartType='Sankey' width="100%" height="600px" data={sankeyData} options={options} />
                 </Grid>
             </Grid>

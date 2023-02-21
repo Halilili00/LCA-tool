@@ -12,12 +12,3 @@ body {
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
-/*@media print {
-  @page{
-    margin: 2cm;
-  }
-  html, body {
-    margin: 0;
-  }
-}*/
