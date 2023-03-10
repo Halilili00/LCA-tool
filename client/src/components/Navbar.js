@@ -8,10 +8,13 @@ import decode from 'jwt-decode';
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/actions/authActions";
 import { useMsal } from "@azure/msal-react";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Navbar = ({ activeMode, setAciveMode }) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
   const [anchorEl, setAnchorEl] = useState(null);
+  const [formsMenu, setFormsMenu] = useState(null);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -46,34 +49,56 @@ const Navbar = ({ activeMode, setAciveMode }) => {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleFormsMenu = (event) => {
+    setFormsMenu(event.currentTarget);
+  };
+
+  const handleCollapse = () => {
+    setOpen(!open);
+  }
+
   const handleClose = () => {
     setAnchorEl(null);
+    setFormsMenu(null);
   };
 
   return (
     <AppBar component="nav" position="static" sx={{
       backgroundColor: "#282c34", "@media print": {
         "&":
-          { display: "none"}
+          { display: "none" }
       }
     }}>
       <Toolbar>
         <Typography
-          variant="h3"
+          variant="h6"
           component={Link}
           to="/LCADatas"
           style={{ textDecoration: "none", color: "white" }}
           sx={{ flexGrow: 1, display: "flex", justifyContent: "flex-start" }}
         >
-          LCA Tool
+          Calculations for Greenhouse Gas Emissions
         </Typography>
         <Box sx={{ flexGrow: 0, display: { xs: "none", sm: "none", md: "flex" } }}>
           <Button component={Link} variant="h4" to="/LCADatas" sx={{ color: "#fff" }}>
-            Added Datas
+            Calculations
           </Button>
-          <Button component={Link} variant="h4" to="/Forms" sx={{ color: "#fff" }}>
-            Machining form
+          <Button variant="h4" sx={{ color: "#fff" }} endIcon={<KeyboardArrowDownIcon />} onClick={handleFormsMenu}>
+            Add new calculation
           </Button>
+          <Menu anchorEl={formsMenu} onClose={handleClose} open={Boolean(formsMenu)}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}>
+            <MenuItem component={Link} to="/Forms" onClick={handleClose}>Machining</MenuItem>
+            <MenuItem component={Link} to="/Forms" onClick={handleClose}>Temp2</MenuItem>
+          </Menu>
           {user ?
             <>
               <Box display="flex">
@@ -98,6 +123,32 @@ const Navbar = ({ activeMode, setAciveMode }) => {
                   }}
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
+                  PaperProps={{
+                    elevation: 0,
+                    sx: {
+                      overflow: 'visible',
+                      filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                      mt: 1.5,
+                      '& .MuiAvatar-root': {
+                        width: 32,
+                        height: 32,
+                        ml: -0.5,
+                        mr: 1,
+                      },
+                      '&:before': {
+                        content: '""',
+                        display: 'block',
+                        position: 'absolute',
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: 'background.paper',
+                        transform: 'translateY(-50%) rotate(45deg)',
+                        zIndex: 0,
+                      },
+                    },
+                  }}
                 >
                   <MenuItem onClick={logoutUser}><ListItemIcon><LogoutOutlinedIcon /></ListItemIcon>Logout</MenuItem>
                   {user?.result?.isAdmin && <Divider />}
@@ -131,6 +182,32 @@ const Navbar = ({ activeMode, setAciveMode }) => {
           }}
           open={Boolean(anchorEl)}
           onClose={handleClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: 'visible',
+              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+              mt: 1.5,
+              '& .MuiAvatar-root': {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              '&:before': {
+                content: '""',
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: 'background.paper',
+                transform: 'translateY(-50%) rotate(45deg)',
+                zIndex: 0,
+              },
+            },
+          }}
         >
           {user && <MenuItem>
             <Grid container direction="column" alignItems="center" justifyContent="center">
@@ -143,8 +220,14 @@ const Navbar = ({ activeMode, setAciveMode }) => {
             </Grid>
           </MenuItem>}
           <Divider />
-          <MenuItem component={Link} to="/Forms">Machining form</MenuItem>
-          <MenuItem component={Link} to="/LCADatas">Added Datas</MenuItem>
+          <MenuItem onClick={handleCollapse}>Add new calculation</MenuItem>
+          {open && <li style={{marginLeft: "15px"}}>
+            <MenuItem component={Link} to="/Forms" onClick={() => setOpen(false)}>Machining</MenuItem>
+            <MenuItem component={Link} to="/Forms" onClick={() => setOpen(false)}>Temp2</MenuItem>
+          </li>}
+          <MenuItem component={Link} to="/LCADatas">
+            Calculations
+          </MenuItem>
           <Divider />
           {user ? <MenuItem onClick={logoutUser}><ListItemIcon><LogoutOutlinedIcon /></ListItemIcon>Logout</MenuItem>
             : <MenuItem component={Link} to="/">Sign in</MenuItem>}

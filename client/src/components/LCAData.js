@@ -8,7 +8,7 @@ import TabPanel from '../toolbox/TabPanel';
 const LCAData = () => {
     const { posts, loading, error } = useSelector((state) => state.postReducer);
     const [query, setQuery] = useState("");
-    const [TabsP, tabValue] = TabPanel([{ label: "All", value: "All" }, { label: "Machingins", value: "MAC-0001" }, { label: "Temp2", value: "MAC-0002" }]);
+    const [TabsP, tabValue] = TabPanel([{ label: "All", value: "All" }, { label: "Machining", value: "MAC-0001" }, { label: "Temp2", value: "MAC-0002" }]);
 
     const tabPosts = useMemo(() => {
         if (!posts.length) return []

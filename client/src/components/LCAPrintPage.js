@@ -35,8 +35,8 @@ const LCAPrintPage = () => {
     return (
         <div>
             {loading ? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' />
-                : <Grid container key={post._id} style={{border: "5px double grey" }} direction="column">
-                    <Grid item style={{marginLeft: "10px"}}>
+                : <Grid container key={post._id} sx={{ border: "5px double grey","@media print": { "&": {width:"100%", border: "0"}}}} direction="column">
+                    <Grid item style={{ marginLeft: "10px" }}>
                         <Grid item style={{ display: "flex", justifyContent: "flex-end", padding: "5px" }}>
                             <ButtonGroup
                                 sx={{
@@ -50,7 +50,10 @@ const LCAPrintPage = () => {
                                 <Button variant='contained' onClick={() => window.print()}><PictureAsPdfIcon /></Button>
                             </ButtonGroup>
                         </Grid>
-                        <Grid container direction="column">
+                        <Grid container direction="column" sx={{"@media print": { "&": {margin: "10px 0 20px 0"}} }}>
+                            <Grid item>
+                                <Typography variant='h5' align="left">LCAID: {post.lcaID}</Typography>
+                            </Grid>
                             <Grid item>
                                 <Typography variant='h5' align="left">Part name: {post.partName}</Typography>
                             </Grid>
@@ -63,6 +66,15 @@ const LCAPrintPage = () => {
                             <Grid item>
                                 <Typography variant='h5' align="left">Valid date: {(post.validDate?.start && post.validDate.start !== null) && moment(post.validDate.start).format("DD/MM/YYYY")} to {(post.validDate?.end && post.validDate.end !== null) && moment(post.validDate.end).format("DD/MM/YYYY")}</Typography>
                             </Grid>
+                            <Grid item container>
+                                <Grid item>
+                                    <Typography variant='h5' align="left">Description:</Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Typography variant='body1' align="left" style={{ whiteSpace: "pre-wrap", fontSize: "1.5rem" }}> {post.description}</Typography>
+                                </Grid>
+
+                            </Grid>
                             <Grid item>
                                 <Typography variant='h5' align="left">Name of production site: {post.productionSite?.factoryName}</Typography>
                             </Grid>
@@ -72,7 +84,7 @@ const LCAPrintPage = () => {
                         </Grid>
                     </Grid>
                     <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                        <Table sx={{ minWidth: 700}} aria-label="customized table">
                             <TableHead >
                                 <TableRow>
                                     <TableCell></TableCell>

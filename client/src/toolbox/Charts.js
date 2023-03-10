@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import Chart from 'react-google-charts';
 import useSum from '../hooks/useSum';
 
@@ -22,7 +22,6 @@ const PieChart = ({ post }) => {
         }
     };
     const options2 = {
-        title: "GHG breakdown",
         legend: { position: "bottom" }
     };
     const { chartCategorySums, chartSums } = useSum(post);
@@ -68,12 +67,15 @@ const PieChart = ({ post }) => {
     console.log(sum)
     return (
         <>{sum > 0 &&
-            <Grid container direction="column">
-                <Grid item style={{ pageBreakAfter: "always" }}>
+            <Grid container direction="column" sx={{"@media print": { "&": {}}, pageBreakBefore: "always" }}>
+                <Grid item style={{ marginTop: "20px" }}>
+                    <Typography variant='h4' color="black">GHG breakdown</Typography>
+                </Grid>
+                <Grid item>
                     <Chart chartType='PieChart' width="100%" height="400px" data={pieData} options={options2} />
                 </Grid>
-                <Grid item style={{ marginBottom: "20px" }}>
-                    <Chart chartType='Sankey' width="100%" height="600px" data={sankeyData} options={options} />
+                <Grid item style={{ margin: "20px" }}>
+                    <Chart chartType='Sankey' width="100%" height="650px" data={sankeyData} options={options} />
                 </Grid>
             </Grid>
         }

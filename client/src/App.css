@@ -12,3 +12,16 @@ body {
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+@media print {
+  @page {
+    size: auto;
+    margin: 0;
+  }
+  .App-header {
+    color: black;
+  }
+  body {
+    background-color: white;
+  }
+}

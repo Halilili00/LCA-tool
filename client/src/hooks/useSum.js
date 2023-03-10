@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from 'react'
-
 const useSum = (post) => {
     const sums = [
         ["Steel", "Steel removed", post?.steelRemoved.value * post?.steelRemoved.coefficinet],

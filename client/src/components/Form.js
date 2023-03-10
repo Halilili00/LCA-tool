@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createPost, updatePost } from '../redux/actions/postActions'
 import useSum from '../hooks/useSum'
 import { useDialogAlert } from '../hooks/useDialogAlert'
-import TabPanel from '../toolbox/TabPanel'
 import TextInput from '../toolbox/TextInput'
 
 const formInitalState = {
@@ -14,6 +13,7 @@ const formInitalState = {
   partName: "",
   partID: "",
   creator: "",
+  description: "",
   validDate: { start: `${new Date().toISOString().slice(0, 10)}`, end: `${new Date().toISOString().slice(0, 10)}` },
   productionSite: { factoryName: "", address: "" },
   annualProduction: { value: 1, file: "" },
@@ -33,18 +33,15 @@ const formInitalState = {
   roro: { value: 0, coefficinet: 0, file: "" }
 }
 
-const tabOptions = [{ label: "Machingins", value: "MAC-0001" }, { label: "Temp2", value: "MAC-0002" }]
-
 const Form = () => {
   const user = JSON.parse(localStorage.getItem("profile"));
-  const [formData, setFormData] = useState(formInitalState)
+  const [formData, setFormData] = useState(formInitalState);
   const param = useParams();
   const dispatch = useDispatch();
   const { posts, loading, error } = useSelector((state) => state.postReducer);
   const postToUpdate = posts.find((post) => post._id === param.id);
-  const { totalSum } = useSum(formData);
+  const { totalSum }  = useSum(formData);
   const { handleOpenDialog } = useDialogAlert();
-  const [TabsP, tabValue] = TabPanel(tabOptions);
 
   useEffect(() => {
     if (param.id && postToUpdate) {
@@ -82,6 +79,7 @@ const Form = () => {
       };
     });
   };
+  
   const handleFile = async (e) => {
     const file = e.target.files[0];
     const fileName = e.target.files[0].name;
@@ -103,7 +101,7 @@ const Form = () => {
         title: "You want to update data?",
         succes: "Data is updated",
         buttons: [
-          { lable: "Update and go LCAData page", navigatePage: "/LCADatas", onConfirm: () => {dispatch(updatePost(formData._id,formData))} },
+          { lable: "Update and go Calculations", navigatePage: "/LCADatas", onConfirm: () => {dispatch(updatePost(formData._id,formData))} },
           { lable: "Update and stay in form", onConfirm: () => {dispatch(updatePost(formData._id,formData))}}
         ]
       })
@@ -112,7 +110,7 @@ const Form = () => {
         title: "You want to save data?",
         succes: "Data is saved",
         buttons: [
-          { lable: "Save and go LCAData page", navigatePage: "/LCADatas", onConfirm: () => { dispatch(createPost(formData)) } },
+          { lable: "Save and go Calculations", navigatePage: "/LCADatas", onConfirm: () => { dispatch(createPost(formData)) } },
           { lable: "Save and clear form", onConfirm: () => { dispatch(createPost(formData)); setFormData({ ...formInitalState, tempID: `MAC-0001`, creator: user?.result?.name })}}
         ]
       })
@@ -123,8 +121,6 @@ const Form = () => {
   return (
     <Paper>
       <form onSubmit={handleSubmit} style={{ margin: "0 0 0 20px"}}>
-        <TabsP/>
-        {tabOptions.map((tabOption, index) => tabOption.value === tabValue ? <Typography key={index} variant='h3'>{tabOption.label}</Typography> : null)}
         <Grid container sx={{ mt: 2, paddingRight: "16px" }} spacing={1.5}>
           <TextInput label="Template Id" name="tempID" type="text" value={formData.tempID} readOnly/>
           <TextInput label="Part name" name="partName" type="text" value={formData.partName} handleChange={handleChange} />
@@ -141,6 +137,12 @@ const Form = () => {
           </Grid>
           <Grid item xs={3.8}>
             <TextField fullWidth label="End" name="validDate" type="date" value={formData.validDate.end} onChange={(e) => setFormData({ ...formData, validDate: { ...formData.validDate, end: e.target.value } })} />
+          </Grid>
+          <Grid item xs={3.5}>
+            <Typography variant="h5" align="left">Description</Typography>
+          </Grid>
+          <Grid item xs={8.5}>
+            <TextField fullWidth label="Description" name="description" type="text" defaultValue={formData.description} multiline rows={3} onChange={(e) => setFormData({...formData, description: e.target.value})} />
           </Grid>
           <Grid item xs={3.5}>
             <Typography variant="h5" align="left">Production site</Typography>

@@ -11,7 +11,7 @@ export const signInGoogle = (res, navigate) => async (dispatch) => {
             data: { result: { name: token.given_name + " " + token.family_name, email: token.email, _id: token.sub, imageUrl: token.picture, authMode: "Google"}, token: res.credential }
         })
         //localStorage.setItem("profile", JSON.stringify({result: {name: token.given_name+ " " + token.family_name , email: token.email, _id: token.sub, imageUrl: token.picture}, token: res.credential}));
-        navigate("/Forms");
+        navigate("/LCADatas");
     } catch (error) {
         console.log(error)
     }
@@ -25,7 +25,7 @@ export const signInMicrosoft = (res, navigate)=> async(dispatch) => {
             type: actions.AUTH,
             data: { result: { name: token.name.split(" ").reverse().join(" ").replace(",", ""), email: token.email, _id: token.sub, authMode: "Microsoft"}, token: res.idToken }
         })
-        navigate("/Forms");
+        navigate("/LCADatas");
     } catch (error) {
         console.log(error)
     }
@@ -35,7 +35,7 @@ export const signInAdmin = (signData, navigate) => async(dispatch) => {
     try {
         const {data} = await api.signInAdmin(signData);
         dispatch({type: actions.AUTH, data})
-        navigate("/Forms")
+        navigate("/LCADatas")
     } catch (error) {
         console.log(error.response.data.message)
         dispatch({type: actions.AUTH, error})

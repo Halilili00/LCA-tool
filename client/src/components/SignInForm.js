@@ -7,6 +7,7 @@ import { Chip, Divider, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useMsal } from '@azure/msal-react';
 import ms_login_button from '../images/ms_login_button.png'
+import { loginRequest } from '../configuration';
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -16,14 +17,14 @@ export default function SignIn() {
   //console.log(location)
 
   const handleLogin = async () => {
-    instance.loginPopup({ scopes: ["email", "User.Read"] })
+    instance.loginPopup(loginRequest)
       .then(response => { return dispatch(signInMicrosoft(response, navigate)) })
       .catch(e => { console.log(e) })
   }
 
   return (
     <Box sx={{ padding: "50px", background:"#222B36"}}>
-      <Typography variant='h3'>Welcome to LCA tool</Typography>
+      <Typography variant='h4'>Welcome to Calculations for Greenhouse Gas Emissions</Typography>
       <Typography variant='h5'>Please sign in to continue</Typography>
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "2%", marginBottom: "1%" }}>
         <GoogleLogin

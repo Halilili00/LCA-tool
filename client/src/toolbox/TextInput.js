@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Grid, InputAdornment, TextField, Typography } from '@mui/material'
 
 const TextInput = ({ name, type, label, value, handleChange, unit, readOnly}) => {
@@ -27,4 +27,4 @@ const TextInput = ({ name, type, label, value, handleChange, unit, readOnly}) =>
     )
 }
 
-export default TextInput
+export default memo(TextInput);

@@ -8,6 +8,7 @@ const machiningSchema = mongoose.Schema({
     partName: String, 
     partID: String,
     creator: String,
+    description: String,
     productionSite: {
         factoryName: String,
         address: String
