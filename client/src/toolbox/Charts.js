@@ -64,7 +64,7 @@ const PieChart = ({ post }) => {
     useEffect(() => {
         handleSankeyData(sankeyData)
     }, [])
-    console.log(sum)
+    console.log(sankeyData)
     return (
         <>{sum > 0 &&
             <Grid container direction="column" sx={{"@media print": { "&": {}}, pageBreakBefore: "always" }}>

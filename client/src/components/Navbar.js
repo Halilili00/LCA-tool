@@ -96,8 +96,8 @@ const Navbar = ({ activeMode, setAciveMode }) => {
               vertical: "top",
               horizontal: "right",
             }}>
-            <MenuItem component={Link} to="/Forms" onClick={handleClose}>Machining</MenuItem>
-            <MenuItem component={Link} to="/Forms" onClick={handleClose}>Temp2</MenuItem>
+            <MenuItem component={Link} to="/Forms/MAC-0001" onClick={handleClose}>Machining</MenuItem>
+            <MenuItem component={Link} to="/Forms/PIP-0001" onClick={handleClose}>Pipe manufacturing</MenuItem>
           </Menu>
           {user ?
             <>
@@ -222,8 +222,8 @@ const Navbar = ({ activeMode, setAciveMode }) => {
           <Divider />
           <MenuItem onClick={handleCollapse}>Add new calculation</MenuItem>
           {open && <li style={{marginLeft: "15px"}}>
-            <MenuItem component={Link} to="/Forms" onClick={() => setOpen(false)}>Machining</MenuItem>
-            <MenuItem component={Link} to="/Forms" onClick={() => setOpen(false)}>Temp2</MenuItem>
+            <MenuItem component={Link} to="/Forms/MAC-0001" onClick={() => setOpen(false)}>Machining</MenuItem>
+            <MenuItem component={Link} to="/Forms/PIP-0001" onClick={() => setOpen(false)}>Pipe manufacturing</MenuItem>
           </li>}
           <MenuItem component={Link} to="/LCADatas">
             Calculations

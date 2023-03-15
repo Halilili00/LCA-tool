@@ -148,7 +148,7 @@ const DataTable = ({ findPosts }) => {
                                 <StyledTableCell>
                                     <ButtonGroup >
                                         <Tooltip title="Update">
-                                            <IconButton color='inherit' onClick={() => navigate(`/Forms/${post._id}`)}><EditRoundedIcon /></IconButton>
+                                            <IconButton color='inherit' onClick={() => navigate(`/Forms/${post.tempID}/${post._id}`)}><EditRoundedIcon /></IconButton>
                                         </Tooltip>
                                         <Tooltip title="Detele">
                                             <IconButton color='inherit' onClick={() => handleDeletePost(post._id)}><RemoveCircleRoundedIcon /></IconButton>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonGroup, CircularProgress, Grid, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Button, ButtonGroup, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import LCADataTable from '../toolbox/LCADataTable';
 import Charts from '../toolbox/Charts';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { deletePost } from '../redux/actions/postActions';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import useSum from '../hooks/useSum';
 import { useDialogAlert } from '../hooks/useDialogAlert';
+import Barcode from 'react-barcode';
 
 
 const LCAPrintPage = () => {
@@ -35,7 +36,7 @@ const LCAPrintPage = () => {
     return (
         <div>
             {loading ? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' />
-                : <Grid container key={post._id} sx={{ border: "5px double grey","@media print": { "&": {width:"100%", border: "0"}}}} direction="column">
+                : <Grid container key={post._id} sx={{ border: "5px double grey", "@media print": { "&": { width: "100%", border: "0" } } }} direction="column">
                     <Grid item style={{ marginLeft: "10px" }}>
                         <Grid item style={{ display: "flex", justifyContent: "flex-end", padding: "5px" }}>
                             <ButtonGroup
@@ -46,13 +47,18 @@ const LCAPrintPage = () => {
                                     }
                                 }}>
                                 <Button variant='contained' onClick={() => handleDeletePost(post._id)}>Delete</Button>
-                                <Button variant='contained' onClick={() => navigate(`/Forms/${post._id}`)}>Update</Button>
+                                <Button variant='contained' onClick={() => navigate(`/Forms/${post.tempID}/${post._id}`)}>Update</Button>
                                 <Button variant='contained' onClick={() => window.print()}><PictureAsPdfIcon /></Button>
                             </ButtonGroup>
                         </Grid>
-                        <Grid container direction="column" sx={{"@media print": { "&": {margin: "10px 0 20px 0"}} }}>
-                            <Grid item>
-                                <Typography variant='h5' align="left">LCAID: {post.lcaID}</Typography>
+                        <Grid container direction="column" sx={{ "@media print": { "&": { margin: "10px 0 20px 0" } } }}>
+                            <Grid item container spacing={2} alignItems="center">
+                                <Grid item>
+                                    <Typography variant='h5' align="left">LCAID:</Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Barcode height={31} width={1.5} value={post.lcaID} />
+                                </Grid>
                             </Grid>
                             <Grid item>
                                 <Typography variant='h5' align="left">Part name: {post.partName}</Typography>
@@ -84,7 +90,7 @@ const LCAPrintPage = () => {
                         </Grid>
                     </Grid>
                     <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 700}} aria-label="customized table">
+                        <Table sx={{ minWidth: 700 }} aria-label="customized table">
                             <TableHead >
                                 <TableRow>
                                     <TableCell></TableCell>

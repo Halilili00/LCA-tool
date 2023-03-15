@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { CircularProgress, Grid, InputAdornment, TextField, Typography } from '@mui/material'
+import { CircularProgress, Grid, InputAdornment, TextField} from '@mui/material'
 import { useSelector } from 'react-redux';
 import SearchIcon from '@mui/icons-material/Search';
 import DataTable from './DataTable';
@@ -8,7 +8,7 @@ import TabPanel from '../toolbox/TabPanel';
 const LCAData = () => {
     const { posts, loading, error } = useSelector((state) => state.postReducer);
     const [query, setQuery] = useState("");
-    const [TabsP, tabValue] = TabPanel([{ label: "All", value: "All" }, { label: "Machining", value: "MAC-0001" }, { label: "Temp2", value: "MAC-0002" }]);
+    const [TabsP, tabValue] = TabPanel([{ label: "All", value: "All" }, { label: "Machining", value: "MAC-0001" }, { label: "Pipe manufacturing", value: "PIP-0001" }]);
 
     const tabPosts = useMemo(() => {
         if (!posts.length) return []
@@ -27,10 +27,12 @@ const LCAData = () => {
         })
     }, [query, tabPosts])
 
-    console.log(loading)
+    console.log(posts)
+
+    /*console.log(loading)
     console.log(posts)
     console.log(findPosts)
-    console.log(tabValue.value)
+    console.log(tabValue.value)*/
     return (
         <Grid container direction="column">
             <TextField

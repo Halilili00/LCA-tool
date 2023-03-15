@@ -1,5 +1,6 @@
 import Machining from "../models/machining.js"
 import Counter from "../models/counter.js"
+import PipeManufacturing from "../models/pipemanufacturing.js";
 
 export const getAllMachiningPosts = async (req, res) => {
     try {
@@ -23,11 +24,19 @@ export const getMachiningPosts = async (req, res) => {
 
 export const createMachiningPost = async (req, res) => {
     const post = req.body;
-    let newId = await Counter.findOneAndUpdate({ _id: '63f109494cf3e28c7532a33d' }, { $inc: { machCounter: 1 } }, { new: true }) //for deploying
-    //let newId = await Counter.findOneAndUpdate({ _id: '63d4113b32a19c8613a442a5' }, { $inc: { machCounter: 1 } }, { new: true })
+    const { tempID } = req.params;
+    
+    //let newId = await Counter.findOneAndUpdate({ _id: '63f109494cf3e28c7532a33d' }, { $inc: { machCounter: 1 } }, { new: true }) //for deploying
+    let newId = await Counter.findOneAndUpdate({ _id: '63d4113b32a19c8613a442a5' }, { $inc: { machCounter: 1 } }, { new: true })
     const lcaID = lcaIDGenerator(newId)
     //console.log(lcaID)
-    const newPost = new Machining({ ...post, creatorID: req.userId, createdAt: new Date().toISOString(), tempID: 'MAC-0001', lcaID: lcaID })
+    const newPost = null;
+
+    if(tempID === "MAC-0001") {
+        newPost = new Machining({ ...post, creatorID: req.userId, createdAt: new Date().toISOString(), lcaID: lcaID })
+    } else if(tempID === "PIP-0001") {
+        newPost = new PipeManufacturing({ ...post, creatorID: req.userId, createdAt: new Date().toISOString(), lcaID: lcaID })
+    }
 
     try {
         await newPost.save();
@@ -46,7 +55,7 @@ export const updatePost = async (req, res) => {
         res.status(200).json(post)
     } catch (error) {
         res.status(400).json({ message: error.message })
-    }
+    }loc
 }
 
 export const deletePost = async (req, res) => {

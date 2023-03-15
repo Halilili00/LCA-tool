@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { Button, ButtonGroup, Grid, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
+import Header from "./Header";
 
 const Input = ({ name, type, label, value, handleChange, unit, handleFile, readOnly, coefficinetValue, handleCoeffinetChange, sum, fileValue, handleDeleteFile }) => {
   const downloadPDF = (data, filename) => {
@@ -13,11 +14,10 @@ const Input = ({ name, type, label, value, handleChange, unit, handleFile, readO
     downloadLink.click();
   }
 
+  console.log("Input rendered "+name)
   return (
     <>
-      <Grid item xs={3.5}>
-        <Typography variant="h5" align="left">{label}</Typography>
-      </Grid>
+      <Header size={3.5} variant="h5">{label}</Header>
       {handleCoeffinetChange ?
         <Grid container item xs={5.5} direction="row">
           <Grid item xs={4}>
