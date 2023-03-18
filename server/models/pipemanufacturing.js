@@ -17,14 +17,17 @@ const pipemanufacturingSchema = mongoose.Schema({
         start: Date,
         end: Date
     },
-    /*weight: {value: Number, coefficinet1: {value: Number, description: String}, coefficinet2: {value: Number, description: String}, coefficinet3: {value: Number, description: String},file: { data: String, name: String}},
-    lorry: {disance: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    sea: {distance: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    cutting: {time: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    bending: {time: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    welding: {time: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    pressureTest: {time: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    drilling: {time: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},*/
+    weight: {value: Number,file: { data: String, name: String}},
+    materialEF: {value: Number, description: String}, 
+    electricityInputEF: {value: Number, description: String}, 
+    electricityEF: {value: Number, description: String},
+    lorry: {value: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
+    sea: {value: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
+    cutting: {value: {time:Number, electricity: Number}, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
+    bending: {value: {time:Number, electricity: Number}, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
+    welding: {value: {time:Number, electricity: Number}, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
+    pressureTest: {value: {time:Number, electricity: Number}, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
+    drilling: {value: {time:Number, electricity: Number}, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
 })
 
 const PipeManufacturing = mongoose.model("PipeManufacturing", pipemanufacturingSchema);

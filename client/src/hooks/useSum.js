@@ -37,6 +37,7 @@ const useSum = (post) => {
 
 
     console.log(chartSums)
+    //console.log(post)
     return {
         chartCategorySums, chartSums, totalSum, sums
     }

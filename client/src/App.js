@@ -3,11 +3,9 @@ import React, { useEffect, useState } from "react";
 import "./App.css"
 import { Box } from "@mui/material";
 
-import MachiningsForm from "./components/Forms/MachinigsForm";
 import LCAData from "./components/LCAData";
 import Navbar from "./components/Navbar";
 import SignIn from "./components/SignInForm";
-import LCAPrintPage from "./components/LCAPrintPage";
 import AdminSignForm from "./components/AdminSignForm";
 import OnlyAdminCanRoute from "./toolbox/OnlyAdminCanRoute";
 import PrivateRoutes from "./toolbox/PrivateRoutes";
@@ -22,8 +20,8 @@ import { getAllData, getData } from "./redux/actions/postActions";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
 import { configuration } from "./configuration";
-import PipeManufacturingForm from "./components/Forms/PipeManufacturingForm";
 import FormsRouting from "./components/Forms/FormsRouting";
+import PrintPageRouting from "./components/PrintPages.js/PrintPageRouting";
 
 
 const pca = new PublicClientApplication(configuration)
@@ -69,7 +67,7 @@ const App = () => {
                     <Route path="Forms/:tempID" element={<FormsRouting />} exact />
                     <Route path="Forms/:tempID/:id" element={<FormsRouting />} />
                     <Route path="LCADatas" element={<LCAData />} />
-                    <Route path="LCADatas/:id" element={<LCAPrintPage />} />
+                    <Route path="LCADatas/:tempID/:id" element={<PrintPageRouting/>} />
                   </Route>
                   <Route path="Admin" element={<AdminSignForm />} />
                   <Route element={<OnlyAdminCanRoute />}>

@@ -8,7 +8,7 @@ router.use(auth)
 router.get("/",isAdmin, getAllMachiningPosts);
 router.get("/:userID", getMachiningPosts);
 router.post('/:tempID', createMachiningPost);
-router.delete("/:postID", deletePost);
-router.patch('/:postID', updatePost);
+router.delete("/:tempID/:postID", deletePost);
+router.patch('/:tempID/:postID', updatePost);
 
 export default router;

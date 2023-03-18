@@ -89,8 +89,8 @@ const MachiningsForm = () => {
                 title: "You want to update data?",
                 succes: "Data is updated",
                 buttons: [
-                    { lable: "Update and go Calculations", navigatePage: "/LCADatas", onConfirm: () => { dispatch(updatePost(param.id, Object.assign({},postToUpdate ,Object.assign(infoData, calculationData)))) } },
-                    { lable: "Update and stay in form", onConfirm: () => { dispatch(updatePost(param.id, Object.assign({},postToUpdate ,Object.assign(infoData, calculationData)))) } }
+                    { lable: "Update and go Calculations", navigatePage: "/LCADatas", onConfirm: () => { dispatch(updatePost(postToUpdate.tempID, param.id, Object.assign({},postToUpdate ,Object.assign(infoData, calculationData)))) } },
+                    { lable: "Update and stay in form", onConfirm: () => { dispatch(updatePost(postToUpdate.tempID, param.id, Object.assign({},postToUpdate ,Object.assign(infoData, calculationData)))) } }
                 ]
             })
         } else {
@@ -98,8 +98,8 @@ const MachiningsForm = () => {
                 title: "You want to save data?",
                 succes: "Data is saved",
                 buttons: [
-                    { lable: "Save and go Calculations", navigatePage: "/LCADatas", onConfirm: () => { dispatch(createPost(Object.assign(infoData, calculationData))) } },
-                    { lable: "Save and clear form", onConfirm: () => { dispatch(createPost(Object.assign(infoData, calculationData))); setInfoData(formInfoState); setCalculationData(formCalculationState) } }
+                    { lable: "Save and go Calculations", navigatePage: "/LCADatas", onConfirm: () => { dispatch(createPost(infoData.tempID, Object.assign(infoData, calculationData))) } },
+                    { lable: "Save and clear form", onConfirm: () => { dispatch(createPost(infoData.tempID, Object.assign(infoData, calculationData))); setInfoData(formInfoState); setCalculationData(formCalculationState) } }
                 ]
             })
         }

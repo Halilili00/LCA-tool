@@ -97,18 +97,18 @@ const DataTable = ({ findPosts }) => {
         setPage(0);
     };
 
-    const handleDeletePost = (id) => {
+    const handleDeletePost = (tempID, id) => {
         handleOpenDialog({
             title: "You want to delte data?",
             succes: "Data is deleted",
             buttons: [
-                { lable: "Delte data", onConfirm: () => { dispatch(deletePost(id)) } },
+                { lable: "Delte data", onConfirm: () => { dispatch(deletePost(tempID, id)) } },
             ]
         })
     }
 
     console.log(filteredPosts)
-    console.log(calculateSum(filteredPosts[0]))
+    //console.log(calculateSum(filteredPosts[0]))
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="custom pagination table">
@@ -137,24 +137,24 @@ const DataTable = ({ findPosts }) => {
                         : filteredPosts)
                         .map(post => (
                             <StyledTableRow key={post._id}>
-                                <StyledTableCell onClick={() => navigate(`/LCADatas/${post._id}`)}>{post.lcaID}</StyledTableCell>
+                                <StyledTableCell onClick={() => navigate(`/LCADatas/${post.tempID}/${post._id}`)}>{post.lcaID}</StyledTableCell>
                                 <StyledTableCell>{post.partName}</StyledTableCell>
                                 <StyledTableCell>{post.partID}</StyledTableCell>
                                 <StyledTableCell>{post.creator}</StyledTableCell>
                                 <StyledTableCell>{(post.validDate?.start && post.validDate.start !== null) && moment(post.validDate.start).format("DD/MM/YYYY")} - {(post.validDate?.end && post.validDate.end !== null) && moment(post.validDate.end).format("DD/MM/YYYY")}</StyledTableCell>
                                 <StyledTableCell>{post.productionSite?.factoryName}</StyledTableCell>
                                 <StyledTableCell>{post.productionSite?.address}</StyledTableCell>
-                                <StyledTableCell align='right'>{calculateSum(post)}</StyledTableCell>
+                                <StyledTableCell align='right'>tulee</StyledTableCell>
                                 <StyledTableCell>
                                     <ButtonGroup >
                                         <Tooltip title="Update">
                                             <IconButton color='inherit' onClick={() => navigate(`/Forms/${post.tempID}/${post._id}`)}><EditRoundedIcon /></IconButton>
                                         </Tooltip>
                                         <Tooltip title="Detele">
-                                            <IconButton color='inherit' onClick={() => handleDeletePost(post._id)}><RemoveCircleRoundedIcon /></IconButton>
+                                            <IconButton color='inherit' onClick={() => handleDeletePost(post.tempID ,post._id)}><RemoveCircleRoundedIcon /></IconButton>
                                         </Tooltip>
                                         <Tooltip title="Go details">
-                                            <IconButton color='inherit' onClick={() => navigate(`/LCADatas/${post._id}`)}><MoreHorizOutlinedIcon /></IconButton>
+                                            <IconButton color='inherit' onClick={() => navigate(`/LCADatas/${post.tempID}/${post._id}`)}><MoreHorizOutlinedIcon /></IconButton>
                                         </Tooltip>
                                     </ButtonGroup>
                                 </StyledTableCell>

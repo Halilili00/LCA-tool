@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, ButtonGroup, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import LCADataTable from '../toolbox/LCADataTable';
-import Charts from '../toolbox/Charts';
+import LCADataTable from '../../toolbox/LCADataTable';
+import Charts from '../../toolbox/Charts';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { deletePost } from '../redux/actions/postActions';
+import { deletePost } from '../../redux/actions/postActions';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import useSum from '../hooks/useSum';
-import { useDialogAlert } from '../hooks/useDialogAlert';
+import useSum from '../../hooks/useSum';
+import { useDialogAlert } from '../../hooks/useDialogAlert';
 import Barcode from 'react-barcode';
+import useComponentHeight from '../../hooks/useComponentHeight';
 
 
 const LCAPrintPage = () => {
@@ -18,23 +19,33 @@ const LCAPrintPage = () => {
     const post = posts.find((post) => post._id === param.id);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { totalSum, sums } = useSum(post);
+    const { totalSum, sums, chartCategorySums, chartSums } = useSum(post);
     const { handleOpenDialog } = useDialogAlert();
+    const myComponentRef = useRef(null);
+    const [myComponentHeight, setMyComponentHeight] = useState(0);
 
-    const handleDeletePost = (id) => {
+
+    const handleDeletePost = (tempID, id) => {
         handleOpenDialog({
             title: "You want to delte data?",
             succes: "Data is deleted",
             buttons: [
-                { lable: "Delte data", navigatePage: "/LCADatas", onConfirm: () => { dispatch(deletePost(id)) } },
+                { lable: "Delte data", navigatePage: "/LCADatas", onConfirm: () => { dispatch(deletePost(tempID, id)) } },
             ]
         })
     }
 
+    useEffect(() => {
+        setTimeout(() => {
+            setMyComponentHeight(myComponentRef.current.clientHeight)
+        }, 500);
+    }, [post])
+
     console.log(post)
     console.log(sums)
+    console.log(myComponentHeight)
     return (
-        <div>
+        <div ref={myComponentRef}>
             {loading ? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' />
                 : <Grid container key={post._id} sx={{ border: "5px double grey", "@media print": { "&": { width: "100%", border: "0" } } }} direction="column">
                     <Grid item style={{ marginLeft: "10px" }}>
@@ -46,13 +57,13 @@ const LCAPrintPage = () => {
                                             { display: "none" }
                                     }
                                 }}>
-                                <Button variant='contained' onClick={() => handleDeletePost(post._id)}>Delete</Button>
+                                <Button variant='contained' onClick={() => handleDeletePost(post.tempID, post._id)}>Delete</Button>
                                 <Button variant='contained' onClick={() => navigate(`/Forms/${post.tempID}/${post._id}`)}>Update</Button>
                                 <Button variant='contained' onClick={() => window.print()}><PictureAsPdfIcon /></Button>
                             </ButtonGroup>
                         </Grid>
                         <Grid container direction="column" sx={{ "@media print": { "&": { margin: "10px 0 20px 0" } } }}>
-                            <Grid item container spacing={2} alignItems="center">
+                            <Grid item container spacing={2} sx={{ alignItems: "center", "@media print": { "&": { display: 'none' } } }}>
                                 <Grid item>
                                     <Typography variant='h5' align="left">LCAID:</Typography>
                                 </Grid>
@@ -60,8 +71,13 @@ const LCAPrintPage = () => {
                                     <Barcode height={31} width={1.5} value={post.lcaID} />
                                 </Grid>
                             </Grid>
-                            <Grid item>
-                                <Typography variant='h5' align="left">Part name: {post.partName}</Typography>
+                            <Grid item container spacing={2} sx={{ "@media print": { "&": { justifyContent: "space-between", alignItems: "end" } } }}>
+                                <Grid item>
+                                    <Typography variant='h5' align="left">Part name: {post.partName}</Typography>
+                                </Grid>
+                                <Grid item display='none' sx={{ "@media print": { "&": { display: 'flex', justifyContent: "space-between" } } }}>
+                                    <Barcode height={31} width={1.5} value={post.lcaID} />
+                                </Grid>
                             </Grid>
                             <Grid item>
                                 <Typography variant='h5' align="left">Part ID: {post.partID}</Typography>
@@ -72,7 +88,7 @@ const LCAPrintPage = () => {
                             <Grid item>
                                 <Typography variant='h5' align="left">Valid date: {(post.validDate?.start && post.validDate.start !== null) && moment(post.validDate.start).format("DD/MM/YYYY")} to {(post.validDate?.end && post.validDate.end !== null) && moment(post.validDate.end).format("DD/MM/YYYY")}</Typography>
                             </Grid>
-                            <Grid item container>
+                            <Grid item container style={{ margin: "10px 0 10px 0" }}>
                                 <Grid item>
                                     <Typography variant='h5' align="left">Description:</Typography>
                                 </Grid>
@@ -143,7 +159,7 @@ const LCAPrintPage = () => {
                         </Table>
                     </TableContainer>
                     <Grid item style={{ backgroundColor: "white", marginBottom: "10px" }}>
-                        <Charts post={post} />
+                        <Charts myComponentHeight={myComponentHeight} chartCategorySums={chartCategorySums} chartSums={chartSums}  />
                     </Grid>
                 </Grid>
             }

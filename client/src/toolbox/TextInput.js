@@ -3,7 +3,7 @@ import { Grid, InputAdornment, TextField, Typography } from '@mui/material'
 import Header from './Header'
 
 const TextInput = ({ name, type, label, value, handleChange, unit, readOnly }) => {
-    console.log("Text Input rendered")
+    //console.log("Text Input rendered")
     return (
         <>
             <Header size={3.5} variant="h5">{label}</Header>

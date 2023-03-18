@@ -4,8 +4,12 @@ import PipeManufacturing from "../models/pipemanufacturing.js";
 
 export const getAllMachiningPosts = async (req, res) => {
     try {
-        const posts = await Machining.find().sort({createdAt: -1}); //newest to old
-        res.status(200).json(posts)
+        const machining = await Machining.find().sort({ createdAt: -1 }); //newest to old
+        const pipemanufacturing = await PipeManufacturing.find().sort({ createdAt: -1 });
+
+        const combinedData = machining.concat(pipemanufacturing);
+        const sortedData = combinedData.sort((a, b) => b.createdAt - a.createdAt);
+        res.status(200).json(sortedData)
     } catch (error) {
         res.status(404).json({ message: error.message })
     }
@@ -15,8 +19,12 @@ export const getMachiningPosts = async (req, res) => {
     const { userID } = req.params;
 
     try {
-        const posts = await Machining.find({ creatorID: { $eq: userID } }).sort({createdAt: -1});
-        res.status(200).json(posts)
+        const machining = await Machining.find({ creatorID: { $eq: userID } }).sort({ createdAt: -1 });
+        const pipemanufacturing = await PipeManufacturing.find({ creatorID: { $eq: userID } }).sort({ createdAt: -1 });
+
+        const combinedData = machining.concat(pipemanufacturing);
+        const sortedData = combinedData.sort((a, b) => b.createdAt - a.createdAt);
+        res.status(200).json(sortedData)
     } catch (error) {
         res.status(404).json({ message: error.message })
     }
@@ -25,16 +33,16 @@ export const getMachiningPosts = async (req, res) => {
 export const createMachiningPost = async (req, res) => {
     const post = req.body;
     const { tempID } = req.params;
-    
+
     //let newId = await Counter.findOneAndUpdate({ _id: '63f109494cf3e28c7532a33d' }, { $inc: { machCounter: 1 } }, { new: true }) //for deploying
     let newId = await Counter.findOneAndUpdate({ _id: '63d4113b32a19c8613a442a5' }, { $inc: { machCounter: 1 } }, { new: true })
     const lcaID = lcaIDGenerator(newId)
     //console.log(lcaID)
-    const newPost = null;
+    let newPost = null;
 
-    if(tempID === "MAC-0001") {
+    if (tempID === "MAC-0001") {
         newPost = new Machining({ ...post, creatorID: req.userId, createdAt: new Date().toISOString(), lcaID: lcaID })
-    } else if(tempID === "PIP-0001") {
+    } else if (tempID === "PIP-0001") {
         newPost = new PipeManufacturing({ ...post, creatorID: req.userId, createdAt: new Date().toISOString(), lcaID: lcaID })
     }
 
@@ -47,22 +55,30 @@ export const createMachiningPost = async (req, res) => {
 }
 
 export const updatePost = async (req, res) => {
-    const { postID } = req.params;
+    const { postID, tempID } = req.params;
     const post = req.body;
 
     try {
-        await Machining.findByIdAndUpdate(postID, post);
+        if (tempID === "MAC-0001") {
+            await Machining.findByIdAndUpdate(postID, post);
+        } else if (tempID === "PIP-0001") {
+            await PipeManufacturing.findByIdAndUpdate(postID, post)
+        }
         res.status(200).json(post)
     } catch (error) {
         res.status(400).json({ message: error.message })
-    }loc
+    }
 }
 
 export const deletePost = async (req, res) => {
-    const { postID } = req.params;
+    const { postID, tempID } = req.params;
 
     try {
-        await Machining.findByIdAndRemove(postID);
+        if (tempID === "MAC-0001") {
+            await Machining.findByIdAndRemove(postID);
+        } else if (tempID === "PIP-0001") {
+            await PipeManufacturing.findByIdAndRemove(postID);
+        }    
         res.status(200).json({ message: "Post is removed" })
     } catch (error) {
         res.status(404).json("failed")
@@ -72,7 +88,7 @@ export const deletePost = async (req, res) => {
 const lcaIDGenerator = (newId) => {
     let lcaID = ("MAC000000000000").split("");
     let replacement = newId.machCounter.toString().length;
-    lcaID.splice((lcaID.length-replacement),replacement, newId.machCounter);
+    lcaID.splice((lcaID.length - replacement), replacement, newId.machCounter);
     return lcaID.join('');
 }
 

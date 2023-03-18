@@ -4,9 +4,9 @@ import MachiningsForm from './MachinigsForm';
 import PipeManufacturingForm from './PipeManufacturingForm';
 
 const FormsRouting = () => {
-    const { tempID } = useParams();
+  const { tempID } = useParams();
 
-    let element;
+  let element;
   if (tempID === 'MAC-0001') {
     element = <MachiningsForm />;
   } else if (tempID === 'PIP-0001') {

@@ -1,8 +1,8 @@
 import axios from "axios"
 
 //const API = axios.create({ baseURL: 'http://lcatool.norwayeast.cloudapp.azure.com/api/' }) // For coding
-//const API = axios.create({ baseURL: 'http://localhost:5000/api/' })
-const API = axios.create({ baseURL: 'https://lca-tool.link/api' }) // For deploying
+const API = axios.create({ baseURL: 'http://localhost:5000/api/' })
+//const API = axios.create({ baseURL: 'https://lca-tool.link/api' }) // For deploying
 
 
 API.interceptors.request.use((req) => {
@@ -14,9 +14,9 @@ API.interceptors.request.use((req) => {
 });
 
 export const getData = (userID) => API.get(`posts/${userID}`);
-export const createPost = (newPost) => API.post('posts', newPost)
-export const updatePost = (postID, updatedPost) => API.patch(`posts/${postID}`, updatedPost)
-export const deletePost = (postID) => API.delete(`posts/${postID}`);
+export const createPost = (tempID, newPost) => API.post(`posts/${tempID}`, newPost)
+export const updatePost = (tempID, postID, updatedPost) => API.patch(`posts/${tempID}/${postID}`, updatedPost)
+export const deletePost = (tempID, postID) => API.delete(`posts/${tempID}/${postID}`);
 
 export const getAllData = () => API.get(`/posts`);
 

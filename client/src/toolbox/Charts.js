@@ -3,7 +3,7 @@ import { Grid, Typography } from "@mui/material";
 import Chart from 'react-google-charts';
 import useSum from '../hooks/useSum';
 
-const PieChart = ({ post }) => {
+const PieChart = ({ post, myComponentHeight, chartCategorySums, chartSums }) => {
     const options = {
         sankey: {
             node: {
@@ -24,7 +24,6 @@ const PieChart = ({ post }) => {
     const options2 = {
         legend: { position: "bottom" }
     };
-    const { chartCategorySums, chartSums } = useSum(post);
 
     /*const picked = (({annualProduction, energyConsumption, hydraulicOilConsumption}) => ({
         annualProduction, energyConsumption, hydraulicOilConsumption}))(post);
@@ -48,7 +47,7 @@ const PieChart = ({ post }) => {
         //lisätään pääkategoriat
         for (let i = 1; i < chartCategorySums.length + 1; i++) {
             sankeyData[i] = ["CO2 emission"].concat(chartCategorySums[i - 1])
-            //console.log(sankeyData[i])
+            console.log(sankeyData[i])
         }
         //lisätään pääketogian alacategoriat
         for (let i = chartCategorySums.length + 1; i < (chartCategorySums.length + 1 + chartSums.length); i++) {
@@ -63,11 +62,12 @@ const PieChart = ({ post }) => {
 
     useEffect(() => {
         handleSankeyData(sankeyData)
-    }, [])
-    console.log(sankeyData)
+        //console.log("happen")
+    }, [myComponentHeight])
+
+    console.log(chartCategorySums)
     return (
-        <>{sum > 0 &&
-            <Grid container direction="column" sx={{"@media print": { "&": {}}, pageBreakBefore: "always" }}>
+        <>{sum > 0 && <Grid container direction="column" style={{ pageBreakBefore: myComponentHeight>2846 ? 'auto' : 'always' }}>
                 <Grid item style={{ marginTop: "20px" }}>
                     <Typography variant='h4' color="black">GHG breakdown</Typography>
                 </Grid>
@@ -75,7 +75,7 @@ const PieChart = ({ post }) => {
                     <Chart chartType='PieChart' width="100%" height="400px" data={pieData} options={options2} />
                 </Grid>
                 <Grid item style={{ margin: "20px" }}>
-                    <Chart chartType='Sankey' width="100%" height="650px" data={sankeyData} options={options} />
+                    <Chart chartType='Sankey' width="100%" height="650px" data={sankeyData} options={options} suppressWarning={false}/>
                 </Grid>
             </Grid>
         }
