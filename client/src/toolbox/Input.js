@@ -14,30 +14,6 @@ const Input = ({ header, name, type, label, value, description, handleChange, un
     downloadLink.click();
   }
 
-  const renderValue = () => {
-    return (
-        <>
-            <Grid container item xs={5.5} direction="row">
-
-            </Grid>
-            <Grid item xs={3}>
-                {fileValue ?
-                    <ButtonGroup>
-                        <Tooltip title="Download file">
-                            <Button variant="outlined" onClick={() => downloadPDF(fileValue.data, fileValue.name)} endIcon={<DownloadIcon />}>{fileValue.name.length > 27 ? `${fileValue.name.split("").splice(0, 24).join("")}...` : fileValue.name}</Button>
-                        </Tooltip>
-                        <Tooltip title="Delte file" >
-                            <Button variant='outlined' name={name} onClick={handleDeleteFile}>X</Button>
-                        </Tooltip>
-                    </ButtonGroup>
-                    :
-                    handleFile && <TextField type="file" name={name} onChange={handleFile} />
-                }
-            </Grid>
-        </>
-    )
-}
-
   //console.log("Input rendered " + name)
   return (
     <>

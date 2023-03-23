@@ -79,7 +79,7 @@ const Navbar = ({ activeMode, setAciveMode }) => {
         >
           Calculations for Greenhouse Gas Emissions
         </Typography>
-        <Box sx={{ flexGrow: 0, display: { xs: "none", sm: "none", md: "flex" } }}>
+        <Box sx={{ flexGrow: 0, display: "flex", '@media (max-width: 1034px)': {display: "none"}}}>
           <Button component={Link} variant="h4" to="/LCADatas" sx={{ color: "#fff" }}>
             Calculations
           </Button>
@@ -109,7 +109,7 @@ const Navbar = ({ activeMode, setAciveMode }) => {
                   </Typography>
                 </div>
                 <Menu
-                  sx={{ mt: "45px", display: { xs: "none", sm: "none", md: "flex" } }}
+                  sx={{ mt: "45px", display: "flex", '@media (max-width: 1034px)': {display: "none"} }}
                   id="menu-appbar"
                   anchorEl={anchorEl}
                   anchorOrigin={{
@@ -164,11 +164,11 @@ const Navbar = ({ activeMode, setAciveMode }) => {
             </Button>
           }
         </Box>
-        <Box sx={{ flexGrow: 0, display: { xs: "flex", sm: "flex", md: "none" } }}>
+        <Box sx={{ flexGrow: 0, display: "none", '@media (max-width: 1034px)': {display: "flex"} }}>
           <MenuOutlinedIcon onClick={handleMenu} />
         </Box>
         <Menu
-          sx={{ mt: "25px", display: { xs: "flex", sm: "flex", md: "none" } }}
+          sx={{ mt: "25px", display: "none", '@media (max-width: 1034px)': {display: "flex"} }}
           id="menu-appbar"
           anchorEl={anchorEl}
           anchorOrigin={{

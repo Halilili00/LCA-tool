@@ -36,7 +36,7 @@ const useSum = (post) => {
     }).toFixed(2)
 
 
-    console.log(chartSums)
+    console.log(chartCategorySums)
     //console.log(post)
     return {
         chartCategorySums, chartSums, totalSum, sums

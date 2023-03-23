@@ -1,8 +1,8 @@
 import axios from "axios"
 
 //const API = axios.create({ baseURL: 'http://lcatool.norwayeast.cloudapp.azure.com/api/' }) // For coding
-const API = axios.create({ baseURL: 'http://localhost:5000/api/' })
-//const API = axios.create({ baseURL: 'https://lca-tool.link/api' }) // For deploying
+//const API = axios.create({ baseURL: 'http://localhost:5000/api/' })
+const API = axios.create({ baseURL: 'https://lca-tool.link/api' }) // For deploying
 
 
 API.interceptors.request.use((req) => {

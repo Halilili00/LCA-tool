@@ -18,16 +18,16 @@ const pipemanufacturingSchema = mongoose.Schema({
         end: Date
     },
     weight: {value: Number,file: { data: String, name: String}},
-    materialEF: {value: Number, description: String}, 
-    electricityInputEF: {value: Number, description: String}, 
+    materialEF: {value: Number, value2: Number, description: String}, 
     electricityEF: {value: Number, description: String},
     lorry: {value: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
     sea: {value: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    cutting: {value: {time:Number, electricity: Number}, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    bending: {value: {time:Number, electricity: Number}, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    welding: {value: {time:Number, electricity: Number}, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    pressureTest: {value: {time:Number, electricity: Number}, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
-    drilling: {value: {time:Number, electricity: Number}, coefficinet: {value: Number, description: String}, file: { data: String, name: String}},
+    processElectricityEF: {value: Number, description: String, file: { data: String, name: String}},
+    cutting: {time:Number, electricity: Number},
+    bending: {time:Number, electricity: Number},
+    welding: {time:Number, electricity: Number},
+    pressureTest: {time:Number, electricity: Number},
+    drilling: {time:Number, electricity: Number},
 })
 
 const PipeManufacturing = mongoose.model("PipeManufacturing", pipemanufacturingSchema);

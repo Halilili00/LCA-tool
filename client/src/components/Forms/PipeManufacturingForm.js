@@ -25,17 +25,45 @@ const formInfoState = {
 
 const formCalculationState = {
     weight: { value: 1, file: "" },
-    materialEF: { value: 0, description: "" },
-    electricityInputEF: { value: 0, description: "" },
+    materialEF: { value: 0, value2: 0, description: "" },
     electricityEF: { value: 0, description: "" },
     lorry: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
     sea: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
-    cutting: { value: { time: 0, electricity: 0 }, coefficinet: { value: 0, description: "" }, file: "" },
-    bending: { value: { time: 0, electricity: 0 }, coefficinet: { value: 0, description: "" }, file: "" },
-    welding: { value: { time: 0, electricity: 0 }, coefficinet: { value: 0, description: "" }, file: "" },
-    pressureTest: { value: { time: 0, electricity: 0 }, coefficinet: { value: 0, description: "" }, file: "" },
-    drilling: { value: { time: 0, electricity: 0 }, coefficinet: { value: 0, description: "" }, file: "" },
+    processElectricityEF: { value: 0, description: "", file: ""},
+    cutting: { time: 0, electricity: 0},
+    bending: { time: 0, electricity: 0},
+    welding: { time: 0, electricity: 0},
+    pressureTest: { time: 0, electricity: 0},
+    drilling: { time: 0, electricity: 0},
 }
+
+const materialEFOptions = [
+    { id: 0, label: "Material type", value: 0, value2: 0 },
+    { id: 1, label: "steel production, converter, low-alloyed | steel, low-alloyed | Cutoff, U", value: 2.03478, value2: 0.0242 },
+    { id: 2, label: "steel production, converter, unalloyed | steel, unalloyed | Cutoff, U", value: 1.61835 , value2: 0.0242 },
+    { id: 3, label: "steel production, electric, chromium steel 18/8 | steel, chromium steel 18/8 | Cutoff, U", value: 4.30564, value2: 0.6250 },
+    { id: 4, label: "steel production, electric, low-alloyed | steel, low-alloyed | Cutoff, U", value: 0.32791, value2: 0.54972},
+    { id: 5, label: "cast iron production | cast iron | Cutoff, U", value: 1.34687, value2: 0.42361  },
+    { id: 6, label: "Ductile iron production", value: 1.63668, value2: 0.42361 },
+]
+
+const electricityEFOptions = [
+    { id: 0, label: "Countries", value: 0 },
+    { id: 1, label: "Germany", value: 0.555 },
+    { id: 2, label: "Italy", value: 0.394 },
+    { id: 3, label: "Poland", value: 0.991 },
+    { id: 4, label: "SE", value: 0.044 },
+    { id: 5, label: "NL", value: 0.582 },
+    { id: 6, label: "FI", value: 0.255 },
+    { id: 7, label: "FI-Vaasan sahko", value: 0.148 },
+]
+
+const transportEFOptions = [
+    { id: 0, label: "Transport type", value: 0 },
+    { id: 1, label: "market for transport, freight, lorry 16-32 metric ton, EURO5 | transport, freight, lorry 16-32 metric ton, EURO5 | Cutoff, U", value: 0.1646 },
+    { id: 2, label: "market for transport, freight, sea, container ship | transport, freight, sea, container ship | Cutoff, U", value: 0.0094 },
+    { id: 3, label: "market for transport, freight train | transport, freight train | Cutoff, U", value: 0.0451 },
+]
 
 const PipeManufacturingForm = () => {
     const [infoData, setInfoData] = useState(formInfoState);
@@ -61,12 +89,12 @@ const PipeManufacturingForm = () => {
 
     const handleChangeTime = useCallback((e) => {
         let { name, value } = e.target;
-        setCalculationData({ ...calculationData, [name]: { ...calculationData[name], value: { time: parseFloat(value, 10), electricity: calculationData[name].value.electricity } } })
+        setCalculationData({ ...calculationData, [name]: { ...calculationData[name], time: parseFloat(value, 10) } })
     }, [calculationData])
 
     const handleChangeElectricity = useCallback((e) => {
         let { name, value } = e.target;
-        setCalculationData({ ...calculationData, [name]: { ...calculationData[name], value: { electricity: parseFloat(value, 10), time: calculationData[name].value.time } } })
+        setCalculationData({ ...calculationData, [name]: { ...calculationData[name], electricity: parseFloat(value, 10) } })
     }, [calculationData])
 
     const handleCoeffinetChangeValue = useCallback((e) => {
@@ -104,6 +132,20 @@ const PipeManufacturingForm = () => {
         setCalculationData({ ...calculationData, [name]: { ...calculationData[name], file: "" } })
     }, [calculationData]);
 
+    const handleSelection = useCallback((e, options) => {
+        let { name, value } = e.target;
+        const chosen = options.find(({id}) => id === value)
+        console.log(chosen.value)
+        if (calculationData[name].coefficinet) {
+            setCalculationData({ ...calculationData, [name]: { ...calculationData[name], coefficinet: { value: parseFloat(chosen.value, 10), description: calculationData[name].coefficinet.description } } })
+        } else {
+            if(name === "materialEF"){
+                setCalculationData({ ...calculationData, [name]: { ...calculationData[name], value: parseFloat(chosen.value, 10), value2: parseFloat(chosen.value2, 10), description: calculationData[name].description } })
+            } else {
+                setCalculationData({ ...calculationData, [name]: { ...calculationData[name], value: parseFloat(chosen.value, 10), description: calculationData[name].description } })
+            }
+        }
+    }, [calculationData])
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -131,25 +173,27 @@ const PipeManufacturingForm = () => {
     console.log(infoData)
     console.log(calculationData)
 
+
+
     return (
         <Paper>
             <form onSubmit={handleSubmit}>
                 <Grid container sx={{ mt: 2, paddingRight: "16px", margin: "10px 0 0 0px" }} spacing={1.5}>
                     <InformationForm infoData={infoData} setInfoData={setInfoData} tempID="PIP-0001" />
-                    <Header size={12} variant="h4" sum={sums[0][2]>0 && sums[0][2].toFixed(2) + " kg CO2 eq"}>Material:</Header>
-                    <Input label="Weight" unit="kg" name='weight' type='number' value={calculationData.weight.value} fileValue={calculationData.weight.file} handleChange={handleChangeNumber} handleFile={handleFile} handleDeleteFile={handleDeleteFile}/>
-                    <CofDesInput label="Material EF" unit="kg CO2 eq/kg metal" name='materialEF' type='number' value={calculationData.materialEF.value} description={calculationData.materialEF.description} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} />
-                    <CofDesInput label="Electricity input EF" unit="kWh/kg metal" name='electricityInputEF' type='number' value={calculationData.electricityInputEF.value} description={calculationData.electricityInputEF.description} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} />
-                    <CofDesInput label="Electricity EF" unit="kg CO2 eq/kWh" name='electricityEF' type='number' value={calculationData.electricityEF.value} description={calculationData.electricityEF.description} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} />
+                    <Header size={12} variant="h4" sum={sums[0][2] > 0 && sums[0][2].toFixed(2) + " kg CO2 eq"}>Material:</Header>
+                    <Input label="Weight" unit="kg" name='weight' type='number' value={calculationData.weight.value} fileValue={calculationData.weight.file} handleChange={handleChangeNumber} handleFile={handleFile} handleDeleteFile={handleDeleteFile} />
+                    <CofDesInput options={materialEFOptions} handleSelection={handleSelection} label="Material EF" unit="kg CO2 eq/kg metal" name='materialEF' type='number' name2='electricityInputEF' value2={calculationData.materialEF.value2} value={calculationData.materialEF.value} description={calculationData.materialEF.description} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} />
+                    <CofDesInput options={electricityEFOptions} handleSelection={handleSelection} label="Electricity EF" unit="kg CO2 eq/kWh" name='electricityEF' type='number' value={calculationData.electricityEF.value} description={calculationData.electricityEF.description} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} />
                     <Header size={12} variant="h4">Transport</Header>
-                    <CofDesFileInput header="Lorry" label="Distance" name="lorry" unit="km" type="number" value={calculationData.lorry.value} coefficinetValue={calculationData.lorry.coefficinet.value} description={calculationData.lorry.coefficinet.description} fileValue={calculationData.lorry.file} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[1][2]}/>
-                    <CofDesFileInput header="Sea" label="Distance" name="sea" unit="km" type="number" value={calculationData.sea.value} coefficinetValue={calculationData.sea.coefficinet.value} description={calculationData.sea.coefficinet.description} fileValue={calculationData.sea.file} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[2][2]}/>
+                    <CofDesFileInput options={transportEFOptions} handleSelection={handleSelection} header="Lorry" label="Distance" name="lorry" unit="km" type="number" value={calculationData.lorry.value} coefficinetValue={calculationData.lorry.coefficinet.value} description={calculationData.lorry.coefficinet.description} fileValue={calculationData.lorry.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[1][2]} />
+                    <CofDesFileInput options={transportEFOptions} handleSelection={handleSelection} header="Sea" label="Distance" name="sea" unit="km" type="number" value={calculationData.sea.value} coefficinetValue={calculationData.sea.coefficinet.value} description={calculationData.sea.coefficinet.description} fileValue={calculationData.sea.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[2][2]} />
                     <Header size={12} variant="h4">Mechanical process</Header>
-                    <TimeElecInput header="Cutting" label="Time" name="cutting" unit="min" type="number" time={calculationData.cutting.value.time} electricity={calculationData.cutting.value.electricity} coefficinetValue={calculationData.cutting.coefficinet.value} description={calculationData.cutting.coefficinet.description} fileValue={calculationData.cutting.file} handleTime={handleChangeTime} handleElectricity={handleChangeElectricity} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[3][2]}/>
-                    <TimeElecInput header="Bending" label="Time" name="bending" unit="min" type="number" time={calculationData.bending.value.time} electricity={calculationData.bending.value.electricity} coefficinetValue={calculationData.bending.coefficinet.value} description={calculationData.bending.coefficinet.description} fileValue={calculationData.bending.file} handleTime={handleChangeTime} handleElectricity={handleChangeElectricity} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[4][2]}/>
-                    <TimeElecInput header="Welding" label="Time" name="welding" unit="min" type="number" time={calculationData.welding.value.time} electricity={calculationData.welding.value.electricity} coefficinetValue={calculationData.welding.coefficinet.value} description={calculationData.welding.coefficinet.description} fileValue={calculationData.welding.file} handleTime={handleChangeTime} handleElectricity={handleChangeElectricity} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[5][2]}/>
-                    <TimeElecInput header="Pressure test" label="Time" name="pressureTest" unit="min" type="number" time={calculationData.pressureTest.value.time} electricity={calculationData.pressureTest.value.electricity} coefficinetValue={calculationData.pressureTest.coefficinet.value} description={calculationData.pressureTest.coefficinet.description} fileValue={calculationData.pressureTest.file} handleTime={handleChangeTime} handleElectricity={handleChangeElectricity} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[6][2]}/>
-                    <TimeElecInput header="Drilliing" label="Time" name="drilling" unit="min" type="number" time={calculationData.drilling.value.time} electricity={calculationData.drilling.value.electricity} coefficinetValue={calculationData.drilling.coefficinet.value} description={calculationData.drilling.coefficinet.description} fileValue={calculationData.drilling.file} handleTime={handleChangeTime} handleElectricity={handleChangeElectricity} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[7][2]}/>
+                    <CofDesFileInput options={electricityEFOptions} handleSelection={handleSelection} label="Electricity EF" unit="kg CO2 eq/kWh" name='processElectricityEF' type='number' coefficinetValue={calculationData.processElectricityEF.value} description={calculationData.processElectricityEF.description} fileValue={calculationData.processElectricityEF.file} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} />
+                    <TimeElecInput header="Cutting" label="Time" name="cutting" unit="min" type="number" value={calculationData.cutting.time} coefficinetValue={calculationData.cutting.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[3][2]} />
+                    <TimeElecInput header="Bending" label="Time" name="bending" unit="min" type="number" value={calculationData.bending.time} coefficinetValue={calculationData.bending.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[4][2]} />
+                    <TimeElecInput header="Welding" label="Time" name="welding" unit="min" type="number" value={calculationData.welding.time} coefficinetValue={calculationData.welding.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[5][2]} />
+                    <TimeElecInput header="Pressure test" label="Time" name="pressureTest" unit="min" type="number" value={calculationData.pressureTest.time} coefficinetValue={calculationData.pressureTest.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[6][2]} />
+                    <TimeElecInput header="Drilliing" label="Time" name="drilling" unit="min" type="number" value={calculationData.drilling.time} coefficinetValue={calculationData.drilling.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[7][2]} />
                     <Grid item xs={12} mt={4}>
                         <Typography variant='h3'>Total sum is: {totalSum} kg CO2 eq</Typography>
                     </Grid>

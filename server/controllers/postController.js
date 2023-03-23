@@ -34,8 +34,8 @@ export const createMachiningPost = async (req, res) => {
     const post = req.body;
     const { tempID } = req.params;
 
-    //let newId = await Counter.findOneAndUpdate({ _id: '63f109494cf3e28c7532a33d' }, { $inc: { machCounter: 1 } }, { new: true }) //for deploying
-    let newId = await Counter.findOneAndUpdate({ _id: '63d4113b32a19c8613a442a5' }, { $inc: { machCounter: 1 } }, { new: true })
+    let newId = await Counter.findOneAndUpdate({ _id: '63f109494cf3e28c7532a33d' }, { $inc: { machCounter: 1 } }, { new: true }) //for deploying
+    //let newId = await Counter.findOneAndUpdate({ _id: '63d4113b32a19c8613a442a5' }, { $inc: { machCounter: 1 } }, { new: true })
     const lcaID = lcaIDGenerator(newId)
     //console.log(lcaID)
     let newPost = null;

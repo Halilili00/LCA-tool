@@ -21,8 +21,8 @@ const LCAPrintPage = () => {
     const dispatch = useDispatch();
     const { totalSum, sums, chartCategorySums, chartSums } = useSum(post);
     const { handleOpenDialog } = useDialogAlert();
-    const myComponentRef = useRef(null);
-    const [myComponentHeight, setMyComponentHeight] = useState(0);
+    //const myComponentRef = useRef(null);
+    //const [myComponentHeight, setMyComponentHeight] = useState(0);
 
 
     const handleDeletePost = (tempID, id) => {
@@ -35,17 +35,17 @@ const LCAPrintPage = () => {
         })
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         setTimeout(() => {
             setMyComponentHeight(myComponentRef.current.clientHeight)
         }, 500);
-    }, [post])
+    }, [post])*/
 
     console.log(post)
     console.log(sums)
-    console.log(myComponentHeight)
+    //console.log(myComponentHeight)
     return (
-        <div ref={myComponentRef}>
+        <div>
             {loading ? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' />
                 : <Grid container key={post._id} sx={{ border: "5px double grey", "@media print": { "&": { width: "100%", border: "0" } } }} direction="column">
                     <Grid item style={{ marginLeft: "10px" }}>
@@ -159,7 +159,7 @@ const LCAPrintPage = () => {
                         </Table>
                     </TableContainer>
                     <Grid item style={{ backgroundColor: "white", marginBottom: "10px" }}>
-                        <Charts myComponentHeight={myComponentHeight} chartCategorySums={chartCategorySums} chartSums={chartSums}  />
+                        <Charts chartCategorySums={chartCategorySums} chartSums={chartSums}  />
                     </Grid>
                 </Grid>
             }

@@ -14,6 +14,7 @@ const TextInput = ({ name, type, label, value, handleChange, unit, readOnly }) =
                     type={type}
                     value={value}
                     onChange={handleChange}
+                    required
                     fullWidth
                     InputProps={{
                         readOnly: readOnly,

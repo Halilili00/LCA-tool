@@ -3,7 +3,7 @@ import { Grid, Typography } from "@mui/material";
 import Chart from 'react-google-charts';
 import useSum from '../hooks/useSum';
 
-const PieChart = ({ post, myComponentHeight, chartCategorySums, chartSums }) => {
+const PieChart = ({ chartCategorySums, chartSums }) => {
     const options = {
         sankey: {
             node: {
@@ -24,18 +24,6 @@ const PieChart = ({ post, myComponentHeight, chartCategorySums, chartSums }) => 
     const options2 = {
         legend: { position: "bottom" }
     };
-
-    /*const picked = (({annualProduction, energyConsumption, hydraulicOilConsumption}) => ({
-        annualProduction, energyConsumption, hydraulicOilConsumption}))(post);
-    const entires = Object.entries(picked)
-    const [data,setData] = useState([["Pizza", "Popularity"],["Pepperoni", 33]]);
-
-    useEffect(()=>{
-        setData([...data, ...(entires.map(e=> [e[0],e[1].value]))])
-        //entires.map(e=> setData([...data, [e[0],e[1].value]]))
-        console.log(entires)
-    },[])
-    console.log(data)*/
 
     const pieData = [["Sourece", "Emission"]].concat(chartCategorySums)
 
@@ -63,19 +51,19 @@ const PieChart = ({ post, myComponentHeight, chartCategorySums, chartSums }) => 
     useEffect(() => {
         handleSankeyData(sankeyData)
         //console.log("happen")
-    }, [myComponentHeight])
+    }, [chartSums])
 
-    console.log(chartCategorySums)
+    console.log(sankeyData)
     return (
-        <>{sum > 0 && <Grid container direction="column" style={{ pageBreakBefore: myComponentHeight>2846 ? 'auto' : 'always' }}>
+        <>{sum > 0 && <Grid container direction="column" sx={{ pageBreakBefore: "always" }}>
                 <Grid item style={{ marginTop: "20px" }}>
                     <Typography variant='h4' color="black">GHG breakdown</Typography>
                 </Grid>
                 <Grid item>
                     <Chart chartType='PieChart' width="100%" height="400px" data={pieData} options={options2} />
                 </Grid>
-                <Grid item style={{ margin: "20px" }}>
-                    <Chart chartType='Sankey' width="100%" height="650px" data={sankeyData} options={options} suppressWarning={false}/>
+                <Grid item style={{ margin: "20px 20px 50px 20px" }}>
+                    <Chart chartType='Sankey' width="100%" height="650px" data={sankeyData} options={options}/>
                 </Grid>
             </Grid>
         }

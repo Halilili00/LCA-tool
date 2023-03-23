@@ -6,13 +6,13 @@ const Header = ({ children, size, variant, sum }) => {
         <>{sum
             ? <Grid container item xs={size}>
                 <Grid item xs={8}>
-                <Typography variant={variant} align="left">{children}</Typography>
+                    <Typography variant={variant} align="left">{children}</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography variant="h5" align="right" marginRight={"5%"}>= {sum}</Typography>
+                </Grid>
             </Grid>
-            <Grid item xs={4}>
-                <Typography variant="h5" align="right" marginRight={"5%"}>= {sum}</Typography>
-            </Grid>
-            </Grid>
-            : <Grid item xs={size}>
+            : <Grid item xs={size} >
                 <Typography variant={variant} align="left">{children}</Typography>
             </Grid>}
         </>
