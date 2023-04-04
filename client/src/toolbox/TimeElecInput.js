@@ -3,16 +3,16 @@ import { Button, ButtonGroup, Grid, InputAdornment, TextField, Tooltip, Typograp
 import DownloadIcon from '@mui/icons-material/Download';
 import Header from './Header'
 
-const TimeElecInput = ({ header, name, type, label, time, value, electricity, description, handleChange, handleTime, handleElectricity, unit, handleFile, readOnly, coefficinetValue, handleCoeffinetChange, sum, fileValue, handleDeleteFile, handleDescription }) => {
+const TimeElecInput = ({ header, name, type, label1, label2, time, value, electricity, description, handleChange, handleTime, handleElectricity, unit1, unit2, handleFile, readOnly, coefficinetValue, handleCoeffinetChange, sum, fileValue, handleDeleteFile, handleDescription }) => {
 
 
     return (
         <>
-            <Header size={3.5} variant="h5">{header ? header : label}</Header>
+            <Header size={3.5} variant="h5">{header ? header : label1}</Header>
             <Grid container item xs={8.5} direction="row">
                 <Grid item xs={4}>
                     <TextField
-                        label={label}
+                        label={label1}
                         name={name}
                         type={type}
                         required
@@ -21,7 +21,7 @@ const TimeElecInput = ({ header, name, type, label, time, value, electricity, de
                         fullWidth
                         InputProps={{
                             readOnly: readOnly,
-                            endAdornment: <InputAdornment position="end" >{unit}</InputAdornment>
+                            endAdornment: <InputAdornment position="end" >{unit1}</InputAdornment>
                         }}
                         inputProps={{
                             step: 0.01
@@ -33,7 +33,7 @@ const TimeElecInput = ({ header, name, type, label, time, value, electricity, de
                 </Grid>
                 <Grid item xs={4}>
                     <TextField
-                        label={"Electricity"}
+                        label={label2}
                         name={name}
                         type={type}
                         required
@@ -41,7 +41,7 @@ const TimeElecInput = ({ header, name, type, label, time, value, electricity, de
                         onChange={handleCoeffinetChange}
                         fullWidth
                         InputProps={{
-                            endAdornment: <InputAdornment position="end" sx={{ "& .MuiTypography-root": { fontSize: "0.7rem" }}}>kWh/min</InputAdornment>
+                            endAdornment: <InputAdornment position="end" sx={{ "& .MuiTypography-root": { fontSize: "0.7rem" }}}>{unit2}</InputAdornment>
                         }}
                         inputProps={{
                             step: 0.01

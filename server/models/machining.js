@@ -18,6 +18,7 @@ const machiningSchema = mongoose.Schema({
         end: Date
     },
     annualProduction: { value: Number, file: { data: String, name: String} },
+    materialEF: {value: { type: Number, default: 0}, description: { type: String, default: ""}, file: { data: String, name: String}},
     steel: { value: Number, file: { data: String, name: String} },
     steelRemoved: { value: Number, coefficinet: Number, file: { data: String, name: String} },
     partWeight: {coefficinet: Number, file: { data: String, name: String}},
@@ -27,7 +28,9 @@ const machiningSchema = mongoose.Schema({
     hydraulicOilConsumption: { value: Number, coefficinet: Number, file: { data: String, name: String} },
     packagingPlastic: { value: Number, coefficinet: Number, file: { data: String, name: String} },
     oil: { value: Number, coefficinet: Number, file: { data: String, name: String} },
-    electrycity: { value: Number, coefficinet: Number, file: { data: String, name: String} },
+    electrycity: { value: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String} },
+    trackCof: {value: { type: Number, default: 0}, description: { type: String, default: ""}, file: { data: String, name: String}},
+    shipCof: {value: { type: Number, default: 0}, description: { type: String, default: ""}, file: { data: String, name: String}},
     euro5: { value: Number, coefficinet: Number, file: { data: String, name: String} },
     euro6: { value: Number, coefficinet: Number, file: { data: String, name: String} },
     euro7: { value: Number, coefficinet: Number, file: { data: String, name: String} },

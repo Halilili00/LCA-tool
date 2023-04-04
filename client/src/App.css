@@ -15,7 +15,7 @@ body {
 
 @media print {
   @page {
-    size: A3;
+    size: 50cm 80cm;
     margin: 0;
   }
   .App-header {
