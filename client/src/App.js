@@ -30,7 +30,7 @@ const App = () => {
   const user = useSelector((state) => state.authReducer.authData);
   const dispatch = useDispatch();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeMode, setAciveMode] = useState("Admin");
+  const [activeMode, setAciveMode] = useState("User");
 
   useEffect(() => {
     if (user?.token) {

@@ -1,65 +1,51 @@
-import React, { useState } from 'react'
-import { Button, Container, FormHelperText, Grid, Paper, TextField, Typography } from "@mui/material";
+import React from 'react'
+import { Box, Chip, Divider, FormHelperText, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
 import { signInAdmin } from '../redux/actions/authActions';
 import { useNavigate } from 'react-router-dom';
 
+import { GoogleLogin } from '@react-oauth/google';
+import { useMsal } from '@azure/msal-react';
+import ms_login_button from '../images/ms_login_button.png'
+import { loginRequest } from '../configuration';
+
 const AdminSignForm = () => {
-    const [signData, setSignData] = useState({
-        name: "",
-        email: "",
-        password: "",
-    });
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { instance } = useMsal();
     const error = useSelector((state) => state.authReducer.error)
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        dispatch(signInAdmin(signData, navigate))
-        console.log(signData);
-    };
+    const handleLogin = async () => {
+        instance.loginPopup(loginRequest)
+            .then(response => { return dispatch(signInAdmin("Microsoft", response, navigate)) })
+            .catch(e => { console.log(e) })
+    }
 
-    const handleChange = (event) => {
-        let { name, value } = event.target;
-        setSignData({ ...signData, [name]: value });
-    };
     return (
-        <Container component="main" maxWidth="xs">
-            <Paper
-                style={{
-                    marginTop: "20px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    padding: "20px",
-                }}
-                elevation={3}
-            >
-                <Typography variant='h4'>Welcome to LCA tool</Typography>
-                <Typography variant='h5'>You are signing in as a admin</Typography>
-                <form onSubmit={handleSubmit}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField type="text" name="name" value={signData.name} label="First Name and Last Name" variant="outlined" required fullWidth autoFocus onChange={handleChange} />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField type="email" name='email' value={signData.email} label="Email Address" variant="outlined" required fullWidth onChange={handleChange} />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField type="password" name='password' value={signData.password} label="Password" variant="outlined" required autoComplete="false" fullWidth onChange={handleChange} />
-                        </Grid>
-                        {error && <Grid item xs={12} sx={{ display: "flex", justifyContent: "center"}}>
-                            <FormHelperText sx={{color: "red"}}>{error}</FormHelperText>
-                        </Grid>
-                        }
-                        <Grid item xs={12}>
-                            <Button type="submit" variant="contained" fullWidth>Sign In</Button>
-                        </Grid>
-                    </Grid>
-                </form>
-            </Paper>
-        </Container>
+        <Box sx={{ padding: "50px", background: "#222B36" }}>
+            <Typography variant='h4'>Welcome to Calculations for Greenhouse Gas Emissions</Typography>
+            <Typography variant='h5'>You are signing in as a admin</Typography>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "2%", marginBottom: "1%" }}>
+                <GoogleLogin
+                    onSuccess={credentialResponse => {
+                        dispatch(signInAdmin("Google", credentialResponse, navigate))
+                    }}
+                    onError={() => {
+                        console.log('Login Failed');
+                    }}
+                />
+            </div>
+            <Divider>
+                <Chip label="or" style={{ color: "white" }} />
+            </Divider>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "1%" }}>
+                <img src={ms_login_button} alt='Sign in with Microsoft' onClick={() => handleLogin()} />
+            </div>
+            {error && <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+                <FormHelperText sx={{ color: "red" }}>{error}</FormHelperText>
+            </Grid>
+            }
+        </Box>
 
     )
 }

@@ -46,7 +46,7 @@ export const isAdmin = async (req, res, next) => {
         if (token) {
             decodedData = jwt.decode(token);
             //const isPasswordCorrect =  await bcrypt.compare(password, decodedData.password)
-            if (decodedData.isAdmin) {
+            if (decodedData.isAdmin === true) {
                 next()
             } else {
                 res.json({ message: "You are not Admin" })

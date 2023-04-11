@@ -4,7 +4,8 @@ const adminsSchema = mongoose.Schema({
     name: String,
     email: String,
     password: String,
-    isAdmin: {type: Boolean, default: false}
+    isAdmin: {type: Boolean, default: false},
+    sub: {type: String, default: ""},
 })
 
 const Admins = mongoose.model("Admins", adminsSchema);
