@@ -11,10 +11,10 @@ export const getAllData = () => async (dispatch) => {
     }
 }
 
-export const getData = (userID) => async (dispatch) => {
+export const getUserData = () => async (dispatch) => {
     try {
         dispatch({type: actions.LOADING, payload: true})
-        const { data } = await api.getData(userID)
+        const { data } = await api.getUserData()
         dispatch({ type: actions.GET_POSTS, payload: data })
     } catch (error) {
         dispatch({ type: actions.ERROR, payload: error})

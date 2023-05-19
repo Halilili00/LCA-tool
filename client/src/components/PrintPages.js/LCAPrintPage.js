@@ -41,7 +41,7 @@ const LCAPrintPage = () => {
         }, 500);
     }, [post])*/
 
-    console.log(post)
+    console.log(JSON.stringify(post))
     console.log(sums)
     //console.log(myComponentHeight)
     return (

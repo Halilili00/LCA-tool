@@ -42,6 +42,7 @@ const PipeManufacturingPage = () => {
 
   console.log(post)
   console.log(sums)
+  console.log(JSON.stringify(post))
   return (
     <div>
       {loading ? <CircularProgress style={{ marginTop: "150px" }} size="15vh" color='inherit' />

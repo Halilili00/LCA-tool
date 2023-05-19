@@ -15,11 +15,8 @@ export const auth = async (req, res, next) => {
 
         if (token) {
             decodedData = jwt.decode(token);
-            if (req.userId = decodedData?.sub) {
-                next()
-            } else {
-                res.json({ message: "Authentication fail!" })
-            }
+            req.userId = decodedData?.sub
+            next()
         } else {
             res.json({ message: "Incorrect token!" })
         }
@@ -32,7 +29,7 @@ export const auth = async (req, res, next) => {
 export const isAdmin = async (req, res, next) => {
     const { authorization } = req.headers
 
-    console.log(req.body)
+    //console.log("admin body" + req.body)
 
     if (!authorization) {
         return res.status(401).json({ error: 'Authorization token required' })
@@ -47,6 +44,7 @@ export const isAdmin = async (req, res, next) => {
             decodedData = jwt.decode(token);
             //const isPasswordCorrect =  await bcrypt.compare(password, decodedData.password)
             if (decodedData.isAdmin === true) {
+                req.admin = true;
                 next()
             } else {
                 res.json({ message: "You are not Admin" })
@@ -59,3 +57,8 @@ export const isAdmin = async (req, res, next) => {
         console.log(error)
     }
 }
+
+/*export const canAccess = async (req, res, next) => {
+
+    return
+}*/

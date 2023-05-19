@@ -84,7 +84,7 @@ const MachiningsForm = () => {
 
     useEffect(() => {
         if (param.id && postToUpdate) {
-            setInfoData(Object.assign({}, ...Object.keys(infoData).map(key => ({ [key]: { ...postToUpdate, validDate: { start: postToUpdate.validDate.start.slice(0, 10), end: postToUpdate.validDate.end.slice(0, 10) } }[key] }))))
+            setInfoData(Object.assign({}, ...Object.keys(infoData).map(key => ({ [key]: { ...postToUpdate, validDate: { start: postToUpdate?.validDate?.start.slice(0, 10), end: postToUpdate?.validDate?.end.slice(0, 10) } }[key] }))))
             setCalculationData(Object.assign({}, ...Object.keys(calculationData).map(key => ({ [key]: postToUpdate[key] }))))
         }
     }, [param.id, postToUpdate])

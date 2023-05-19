@@ -13,12 +13,15 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
-export const getData = (userID) => API.get(`posts/${userID}`);
+export const getUserData = () => API.get(`posts`);
 export const createPost = (tempID, newPost) => API.post(`posts/${tempID}`, newPost)
 export const updatePost = (tempID, postID, updatedPost) => API.patch(`posts/${tempID}/${postID}`, updatedPost)
 export const deletePost = (tempID, postID) => API.delete(`posts/${tempID}/${postID}`);
 
-export const getAllData = () => API.get(`/posts`);
+export const getAllData = () => API.get(`/posts/admin`);
 
 export const signUpAdmin = (signData) => API.post('user/signup', signData);
 export const signInAdmin = (signData) => API.post('user/signin', signData);
+
+export const createapikey = (userData) => API.post('apikey/', userData);
+export const getapikey = () => API.get('apikey/');

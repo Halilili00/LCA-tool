@@ -77,9 +77,12 @@ const Navbar = ({ activeMode, setAciveMode }) => {
           style={{ textDecoration: "none", color: "white" }}
           sx={{ flexGrow: 1, display: "flex", justifyContent: "flex-start" }}
         >
-          Calculations for Greenhouse Gas Emissions
+          Product GHG emission<sup>+</sup>
         </Typography>
-        <Box sx={{ flexGrow: 0, display: "flex", '@media (max-width: 1034px)': {display: "none"}}}>
+        <Box sx={{ flexGrow: 0, display: "flex", '@media (max-width: 1200px)': {display: "none"}}}>
+          <Button component={Link} variant="h4" to="/getApi" sx={{ color: "#fff" }}>
+            ApiKey
+          </Button>
           <Button component={Link} variant="h4" to="/LCADatas" sx={{ color: "#fff" }}>
             Calculations
           </Button>
@@ -109,7 +112,7 @@ const Navbar = ({ activeMode, setAciveMode }) => {
                   </Typography>
                 </div>
                 <Menu
-                  sx={{ mt: "45px", display: "flex", '@media (max-width: 1034px)': {display: "none"} }}
+                  sx={{ mt: "45px", display: "flex", '@media (max-width: 1200px)': {display: "none"}}}
                   id="menu-appbar"
                   anchorEl={anchorEl}
                   anchorOrigin={{
@@ -164,11 +167,11 @@ const Navbar = ({ activeMode, setAciveMode }) => {
             </Button>
           }
         </Box>
-        <Box sx={{ flexGrow: 0, display: "none", '@media (max-width: 1034px)': {display: "flex"} }}>
+        <Box sx={{ flexGrow: 0, display: "none", '@media (max-width: 1200px)': {display: "flex"} }}>
           <MenuOutlinedIcon onClick={handleMenu} />
         </Box>
         <Menu
-          sx={{ mt: "25px", display: "none", '@media (max-width: 1034px)': {display: "flex"} }}
+          sx={{ mt: "25px", display: "none", '@media (max-width: 1200px)': {display: "flex"} }}
           id="menu-appbar"
           anchorEl={anchorEl}
           anchorOrigin={{
@@ -220,8 +223,11 @@ const Navbar = ({ activeMode, setAciveMode }) => {
             </Grid>
           </MenuItem>}
           <Divider />
+          <MenuItem component={Link} to="/GetApi">
+            ApiKey
+          </MenuItem>
           <MenuItem onClick={handleCollapse}>Add new calculation</MenuItem>
-          {open && <li style={{marginLeft: "15px"}}>
+          {open && <li style={{ marginLeft: "15px" }}>
             <MenuItem component={Link} to="/Forms/MAC-0001" onClick={() => setOpen(false)}>Machining</MenuItem>
             <MenuItem component={Link} to="/Forms/PIP-0001" onClick={() => setOpen(false)}>Pipe manufacturing</MenuItem>
           </li>}
@@ -237,7 +243,6 @@ const Navbar = ({ activeMode, setAciveMode }) => {
               <MenuItem key={index} onClick={() => setAciveMode(um)}><ListItemIcon></ListItemIcon>{um}</MenuItem>
           ))}
         </Menu>
-
       </Toolbar>
     </AppBar>
   );

@@ -16,11 +16,11 @@ export const getAllMachiningPosts = async (req, res) => {
 }
 
 export const getMachiningPosts = async (req, res) => {
-    const { userID } = req.params;
+    //console.log(req.userId)
 
     try {
-        const machining = await Machining.find({ creatorID: { $eq: userID } }).sort({ createdAt: -1 });
-        const pipemanufacturing = await PipeManufacturing.find({ creatorID: { $eq: userID } }).sort({ createdAt: -1 });
+        const machining = await Machining.find({ creatorID: { $eq: req.userId } }).sort({ createdAt: -1 });
+        const pipemanufacturing = await PipeManufacturing.find({ creatorID: { $eq: req.userId } }).sort({ createdAt: -1 });
 
         const combinedData = machining.concat(pipemanufacturing);
         const sortedData = combinedData.sort((a, b) => b.createdAt - a.createdAt);
@@ -33,18 +33,16 @@ export const getMachiningPosts = async (req, res) => {
 export const createMachiningPost = async (req, res) => {
     const post = req.body;
     const { tempID } = req.params;
+    const model = getModel(tempID)
 
+    if (!model) {
+        return res.status(404).json({ message: "Invalid tempID" });
+    }
     //let newId = await Counter.findOneAndUpdate({ _id: '63f109494cf3e28c7532a33d' }, { $inc: { machCounter: 1 } }, { new: true }) //for deploying
     let newId = await Counter.findOneAndUpdate({ _id: '63d4113b32a19c8613a442a5' }, { $inc: { machCounter: 1 } }, { new: true })
     const lcaID = lcaIDGenerator(newId)
     //console.log(lcaID)
-    let newPost = null;
-
-    if (tempID === "MAC-0001") {
-        newPost = new Machining({ ...post, creatorID: req.userId, createdAt: new Date().toISOString(), lcaID: lcaID })
-    } else if (tempID === "PIP-0001") {
-        newPost = new PipeManufacturing({ ...post, creatorID: req.userId, createdAt: new Date().toISOString(), lcaID: lcaID })
-    }
+    const newPost = new model({ ...post, creatorID: req.userId, createdAt: new Date().toISOString(), lcaID: lcaID });
 
     try {
         await newPost.save();
@@ -57,14 +55,20 @@ export const createMachiningPost = async (req, res) => {
 export const updatePost = async (req, res) => {
     const { postID, tempID } = req.params;
     const post = req.body;
+    const model = getModel(tempID)
+
+    if (!model) {
+        return res.status(404).json({ message: "Invalid tempID" });
+    }
 
     try {
-        if (tempID === "MAC-0001") {
-            await Machining.findByIdAndUpdate(postID, post);
-        } else if (tempID === "PIP-0001") {
-            await PipeManufacturing.findByIdAndUpdate(postID, post)
+        const updatedPost = await model.findByIdAndUpdate(postID, post)
+        if(updatedPost !== null){
+            return res.status(200).json(post)
+        } else {
+            return res.status(204).json(updatedPost)
         }
-        res.status(200).json(post)
+        
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
@@ -72,14 +76,21 @@ export const updatePost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
     const { postID, tempID } = req.params;
+    const model = getModel(tempID)
+    //console.log(req.admin)
 
     try {
-        if (tempID === "MAC-0001") {
-            await Machining.findByIdAndRemove(postID);
-        } else if (tempID === "PIP-0001") {
-            await PipeManufacturing.findByIdAndRemove(postID);
-        }    
-        res.status(200).json({ message: "Post is removed" })
+        if (req.admin) {
+            await model.findByIdAndRemove(postID);
+        } else {
+            const post = await model.findById(postID)
+            if (post.creatorID === req.userId) {
+                await model.findByIdAndRemove(postID);
+                res.status(200).json({ message: "Post is removed" })
+            } else {
+                res.status(401).json("Not Allowed")
+            }
+        }
     } catch (error) {
         res.status(404).json("failed")
     }
@@ -91,6 +102,18 @@ const lcaIDGenerator = (newId) => {
     lcaID.splice((lcaID.length - replacement), replacement, newId.machCounter);
     return lcaID.join('');
 }
+
+const getModel = (tempID) => {
+    switch (tempID) {
+        case "MAC-0001":
+            return Machining;
+        case "PIP-0001":
+            return PipeManufacturing;
+        default:
+            return null;
+    }
+};
+
 
 
 /*export const updatePost = async(req, res) => {

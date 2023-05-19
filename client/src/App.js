@@ -15,13 +15,14 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Route, Routes } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllData, getData } from "./redux/actions/postActions";
+import { getAllData, getUserData } from "./redux/actions/postActions";
 
 import { PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
 import { configuration } from "./configuration";
 import FormsRouting from "./components/Forms/FormsRouting";
 import PrintPageRouting from "./components/PrintPages.js/PrintPageRouting";
+import ApiPage from "./components/ApiPage";
 
 
 const pca = new PublicClientApplication(configuration)
@@ -40,10 +41,10 @@ const App = () => {
         if (activeMode === "Admin") {
           dispatch(getAllData())
         } else {
-          dispatch(getData(decodedToken.sub))
+          dispatch(getUserData())
         }
       } else {
-        dispatch(getData(decodedToken.sub))
+        dispatch(getUserData())
       }
     }
     console.log(user)
@@ -68,6 +69,7 @@ const App = () => {
                     <Route path="Forms/:tempID/:id" element={<FormsRouting />} />
                     <Route path="LCADatas" element={<LCAData />} />
                     <Route path="LCADatas/:tempID/:id" element={<PrintPageRouting/>} />
+                    <Route path="GetApi" element={<ApiPage/>} />
                   </Route>
                   <Route path="Admin" element={<AdminSignForm />} />
                   <Route element={<OnlyAdminCanRoute />}>

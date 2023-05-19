@@ -18,7 +18,7 @@ export const signup = async (req, res) => {
 }
 
 export const signin = async (req, res) => {
-    const { email, id } = req.body
+    const { email, sub } = req.body
 
     try {
         const exitingUser = await Admins.findOne({ email })
@@ -26,7 +26,7 @@ export const signin = async (req, res) => {
             return res.status(404).json({ message: "User doesn't exist" })
         }
 
-        if (exitingUser.sub === id) {
+        if (exitingUser.sub === sub) {
             const token = jwt.sign({ email: exitingUser.email, sub: exitingUser.sub, name: exitingUser.name, isAdmin: exitingUser.isAdmin }, process.env.JWT_KEY, { expiresIn: "1h" });
             res.status(200).json({ result: exitingUser, token })
         } else {
