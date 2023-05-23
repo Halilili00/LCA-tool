@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Grid, InputAdornment, TextField, Typography } from '@mui/material'
+import { Grid, InputAdornment, TextField } from '@mui/material'
 import Header from './Header'
 
 const TextInput = ({ name, type, label, value, handleChange, unit, readOnly }) => {
@@ -7,7 +7,7 @@ const TextInput = ({ name, type, label, value, handleChange, unit, readOnly }) =
     return (
         <>
             <Header size={3.5} variant="h5">{label}</Header>
-            <Grid item xs={8.5} justifyContent="flex-start" display="flex">
+            <Grid item xs={12} sm={8.5} justifyContent="flex-start" display="flex">
                 <TextField
                     label={label}
                     name={name}

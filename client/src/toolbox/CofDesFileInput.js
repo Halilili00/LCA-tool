@@ -1,7 +1,8 @@
-import React, { memo, useEffect, useMemo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { Button, ButtonGroup, Grid, InputAdornment, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
 import DownloadIcon from '@mui/icons-material/Download';
 import Header from './Header'
+import '../App.css'
 
 const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type, value, handleValue, coefficinetValue, options, handleSelection, description, fileValue, handleChange, handleCoeffinetChange, handleDescription, handleFile, handleDeleteFile, sum }) => {
     const downloadPDF = (data, filename) => {
@@ -18,16 +19,16 @@ const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type
 
     useEffect(() => {
         //jos tulee joskus myöhemmin samaanlaisia valuetia optionissa ei sitte ei toimi oikein!!!!
-        if(value!==0){
+        if (value !== 0) {
             options.map(opt => opt.value === coefficinetValue && setId(opt.id))
         }
     }, [coefficinetValue])
     return (
         <>
             <Header size={3.5} variant={lableVariant ? lableVariant : "h5"}>{header ? header : label}</Header>
-            <Grid container item xs={8.5} direction="column" spacing={1}>
+            <Grid container item xs={12} sm={8.5} direction="column" spacing={1}>
                 <Grid container item spacing={1}>
-                    <Grid item xs={6}>
+                    <Grid item sx={6} className="styled-grid2">
                         <Select
                             value={id}
                             onChange={(e) => handleSelection(e, options)}
@@ -39,7 +40,7 @@ const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type
                             ))}
                         </Select>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item sx={6} className="styled-grid2">
                         <TextField
                             label={"Description"}
                             name={name}
@@ -52,7 +53,7 @@ const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type
                 </Grid>
                 {handleCoeffinetChange ?
                     <Grid container item >
-                        <Grid item xs={2.5}>
+                        <Grid item className="styled-grid3">
                             <TextField
                                 label={label}
                                 name={name}
@@ -69,10 +70,10 @@ const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={0.5} style={{ marginTop: "20px" }}>
+                        <Grid item sx={{ margin: "20px 8px 0 8px", '@media (max-width: 900px)': { margin: "8px 0px 8px 0px", minWidth: "100%" } }}>
                             <Typography variant="body2">X</Typography>
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item className="styled-grid3">
                             <TextField
                                 label={"EF"}
                                 name={name}
@@ -89,10 +90,10 @@ const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={3} style={{ marginTop: "20px" }}>
+                        <Grid item style={{ margin: "20px 0px 0 10px" }} className="styled-grid3">
                             {sum > 0 ? <Typography variant="body1">= {sum.toFixed(2)} kg CO2 eq</Typography> : <Typography variant="body1"></Typography>}
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item minWidth="100%">
                             {fileValue ?
                                 <ButtonGroup>
                                     <Tooltip title="Download file">
@@ -103,13 +104,13 @@ const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type
                                     </Tooltip>
                                 </ButtonGroup>
                                 :
-                                handleFile && <TextField type="file" name={name} onChange={handleFile} />
+                                handleFile && <TextField type="file" fullWidth name={name} onChange={handleFile} />
                             }
                         </Grid>
                     </Grid>
                     :
-                    <Grid container item spacing={1}>
-                        <Grid item xs={9} justifyContent="flex-start" display="flex">
+                    <Grid containe item spacing={1} >
+                        <Grid item xs={12}>
                             <TextField
                                 label={"EF"}
                                 name={name}
@@ -124,10 +125,9 @@ const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type
                                 inputProps={{
                                     step: 0.01
                                 }}
-                                style={{maxWidth: "500px"}}
                             />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={12}>
                             {fileValue ?
                                 <ButtonGroup>
                                     <Tooltip title="Download file">
@@ -138,7 +138,7 @@ const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type
                                     </Tooltip>
                                 </ButtonGroup>
                                 :
-                                handleFile && <TextField type="file" name={name} onChange={handleFile} />
+                                handleFile && <TextField type="file" fullWidth name={name} onChange={handleFile} />
                             }
                         </Grid>
                     </Grid>

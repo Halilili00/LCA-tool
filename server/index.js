@@ -34,8 +34,8 @@ app.use('/api-docs', serve, setup(specs));
 app.use(express.json({limit: "100mb"}));
 app.use(cors());
 
-app.get("/", (req, res) => {
-    res.send("Work")
+app.get("/api/test", (req, res) => {
+    res.send("Server work")
 })
 
 app.use("/api/posts", postRouter)

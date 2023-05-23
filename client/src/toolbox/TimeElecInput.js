@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
-import { Button, ButtonGroup, Grid, InputAdornment, TextField, Tooltip, Typography } from '@mui/material'
-import DownloadIcon from '@mui/icons-material/Download';
+import { Grid, InputAdornment, TextField, Typography } from '@mui/material'
 import Header from './Header'
 
 const TimeElecInput = ({ header, name, type, label1, label2, time, value, electricity, description, handleChange, handleTime, handleElectricity, unit1, unit2, handleFile, readOnly, coefficinetValue, handleCoeffinetChange, sum, fileValue, handleDeleteFile, handleDescription }) => {
@@ -9,8 +8,8 @@ const TimeElecInput = ({ header, name, type, label1, label2, time, value, electr
     return (
         <>
             <Header size={3.5} variant="h5">{header ? header : label1}</Header>
-            <Grid container item xs={8.5} direction="row">
-                <Grid item xs={4}>
+            <Grid container item xs={12} sm={8.5} direction="row">
+                <Grid item className="styled-grid3">
                     <TextField
                         label={label1}
                         name={name}
@@ -28,10 +27,10 @@ const TimeElecInput = ({ header, name, type, label1, label2, time, value, electr
                         }}
                     />
                 </Grid>
-                <Grid item xs={0.5} style={{ marginTop: "20px" }}>
+                <Grid item sx={{ margin: "20px 8px 0 8px", '@media (max-width: 900px)': { margin: "8px 0px 8px 0px", minWidth: "100%" } }}>
                     <Typography variant="body2">X</Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item className="styled-grid3">
                     <TextField
                         label={label2}
                         name={name}
@@ -48,7 +47,7 @@ const TimeElecInput = ({ header, name, type, label1, label2, time, value, electr
                         }}
                     />
                 </Grid>
-                <Grid item xs={3.5} style={{ marginTop: "20px" }}>
+                <Grid item className="styled-grid3" style={{ marginTop: "20px" }}>
                     {sum > 0 ? <Typography variant="body1">= {sum.toFixed(2)} CO2 eqv GHG kg</Typography> : <Typography variant="body1"></Typography>}
                 </Grid>
             </Grid>

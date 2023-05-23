@@ -9,7 +9,7 @@ const CofDesInput = ({ name, name2, type, label, value, value2, options, handleV
 
     useEffect(() => {
         //jos tulee joskus myöhemmin samaanlaisia valuetia optionissa ei sitte ei toimi oikein!!!!
-        if(value!==0){
+        if (value !== 0) {
             options.map(opt => opt.value === value && setId(opt.id))
         }
     }, [value])
@@ -18,8 +18,8 @@ const CofDesInput = ({ name, name2, type, label, value, value2, options, handleV
         return (
             <>
                 <Header size={3.5} variant="h5">{label}</Header>
-                <Grid container item xs={8.5} direction="row" spacing={2} alignItems="center">
-                    <Grid item xs={4}>
+                <Grid container item xs={12} sm={8.5} direction="row" spacing={1} alignItems="center">
+                    <Grid item className="styled-grid2">
                         <Select
                             value={id}
                             onChange={(e) => handleSelection(e, options)}
@@ -31,8 +31,18 @@ const CofDesInput = ({ name, name2, type, label, value, value2, options, handleV
                             ))}
                         </Select>
                     </Grid>
-                    {name2 ? <Grid container item xs={4} direction="column" spacing={2}>
-                        <Grid item xs={6} justifyContent="flex-start" display="flex">
+                    <Grid item className="styled-grid2">
+                        <TextField
+                            label={"Description"}
+                            name={name}
+                            type="text"
+                            value={description}
+                            onChange={handleDescription}
+                            fullWidth
+                        />
+                    </Grid>
+                    {name2 ? <Grid container item spacing={1}>
+                        <Grid item className="styled-grid2" justifyContent="flex-start" display="flex">
                             <TextField
                                 label={"EF without electricity"}
                                 name={name}
@@ -52,7 +62,7 @@ const CofDesInput = ({ name, name2, type, label, value, value2, options, handleV
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={6} justifyContent="flex-start" display="flex">
+                        <Grid item className="styled-grid2" justifyContent="flex-start" display="flex">
                             <TextField
                                 label={"EF"}
                                 name={name}
@@ -73,7 +83,7 @@ const CofDesInput = ({ name, name2, type, label, value, value2, options, handleV
                             />
                         </Grid>
                     </Grid>
-                        : <Grid item xs={4} justifyContent="flex-start" display="flex">
+                        : <Grid item minWidth="100%">
                             <TextField
                                 label={label}
                                 name={name}
@@ -93,16 +103,6 @@ const CofDesInput = ({ name, name2, type, label, value, value2, options, handleV
                                 }}
                             />
                         </Grid>}
-                    <Grid item xs={4}>
-                        <TextField
-                            label={"Description"}
-                            name={name}
-                            type="text"
-                            value={description}
-                            onChange={handleDescription}
-                            fullWidth
-                        />
-                    </Grid>
                 </Grid>
             </>
         )

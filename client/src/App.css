@@ -18,10 +18,38 @@ body {
     size: 50cm 80cm;
     margin: 0;
   }
+
   .App-header {
     color: black;
   }
+
   body {
     background-color: white;
+  }
+}
+
+@media (max-width: 700px) {
+  .styled-grid2 {
+    min-width: 100%;
+  }
+}
+
+@media (min-width: 700px) {
+  .styled-grid2 {
+    min-width: 50%;
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 900px) {
+  .styled-grid3 {
+    min-width: 100%;
+  }
+}
+
+@media (min-width: 900px) {
+  .styled-grid3 {
+    min-width: 30%;
+    max-width: 180px;
   }
 }
