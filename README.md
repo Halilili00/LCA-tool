@@ -1,20 +1,49 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Product GHG emission+
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+## Project Description
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+Product GHG emission+ tool enables users to develop inventories of GHG emissions related to their products. The results are obtained using emission factors (EF), GHG emissions per each activity/input, multiplied by the activity or data input. The EFs, which cover multiple GHGs and are expressed in CO2 equivalents (CO2e), are gathered from life cycle databases, government agencies, and academic literature.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Live Website
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+Check out the live version of the website [here](https://lca-tool.link).
+
+## Features
+
+- Authentication with Google and Microsoft
+- Adding data to database
+- Can add descriptions and files to your datas
+- Show total sums
+- Show data in report and pritn as PDF
+- Sort in created date or GHG total emission
+- Visualize data with pie chart and sankey diagram
+- Can create apikey for using server side functionality
+- Responsive (can be used any screen size)
+
+## Technologies used
+
+### Frontend
+
+- React.js
+- Redux
+- MUI
+- React-google-charts
+
+### Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Swagger UI
+
+## Useage
+
+First you need to sign in with Google or Microsoft to authenticate and navigate different sections. Then you can navigate in different sections usgin navbar. 
+- In "ADD NEW CALCULATION" section you can pick which form you want and create data by filling out the form.
+- In "CALCULATIONS" section you can see all data you added. Also can update, delete or sort datas in created date or GHG total emission. Clicing data you navigate page where you can see more about the clicked data with report and charts. Also can update, delete or download as PDF the data.
+- IN "APIKEY" section you can create apikey or can see created apikey.
+After all you can logout manually or it will logout after 1h automatically.
+
+## API Documentation
+
+You can find API documentation from [here](https://lca-tool.link/api-docs/)
