@@ -7,6 +7,7 @@ import adminsRouter from "./routes/adminsRouter.js"
 import apiKeysRouter from "./routes/apiKeysRouter.js"
 import swaggerJSDoc from "swagger-jsdoc";
 import { serve, setup } from "swagger-ui-express";
+import PipeManufacturing from "./models/pipemanufacturing.js";
 
 dotenv.config();
 const app = express();
@@ -21,7 +22,6 @@ const options = {
         servers: [
             {
               url: "http://localhost:5000",
-              url: "https://lca-tool.link",
             },
           ],
       },

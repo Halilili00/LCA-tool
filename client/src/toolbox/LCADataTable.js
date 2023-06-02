@@ -17,7 +17,7 @@ const LCADataTable = ({ rowName, value, coefficinet, description, file, unit, su
 
   return (
     <TableRow>
-      <TableCell style={{ width: "120px" }}>{rowName}</TableCell>
+      <TableCell style={{ width: "120px", position: "sticky", left: 0, backgroundColor: "white" }}>{rowName}</TableCell>
       <TableCell>{value} {unit}</TableCell>
       <TableCell colSpan={2}>{coefficinet ? coefficinet : description}</TableCell>
       {sum ? <TableCell align='right' style={{ width: "150px" }}>{sum.toFixed(2)}</TableCell> : <TableCell></TableCell>}

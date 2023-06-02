@@ -10,7 +10,7 @@ import { createPost, updatePost } from '../../redux/actions/postActions';
 import { useParams } from 'react-router-dom';
 import CofDesFileInput from '../../toolbox/CofDesFileInput';
 import TimeElecInput from '../../toolbox/TimeElecInput';
-import CofDesInput from '../../toolbox/CofDesInput';
+import {transportEFOptions, electricityEFOptions, materialEFOptions} from '../../consts/options.js';
 
 
 const formInfoState = {
@@ -43,34 +43,6 @@ const formCalculationState = {
     euro7: { value: 0, coefficinet: 0, file: "" },
     roro: { value: 0, coefficinet: 0, file: "" }
 }
-
-const transportEFOptions = [
-    { id: 0, label: "Transport type", value: 0 },
-    { id: 1, label: "market for transport, freight, lorry 16-32 metric ton, EURO5 | transport, freight, lorry 16-32 metric ton, EURO5 | Cutoff, U", value: 0.1646 },
-    { id: 2, label: "market for transport, freight, sea, container ship | transport, freight, sea, container ship | Cutoff, U", value: 0.0094 },
-    { id: 3, label: "market for transport, freight train | transport, freight train | Cutoff, U", value: 0.0451 },
-]
-
-const electricityEFOptions = [
-    { id: 0, label: "Countries", value: 0 },
-    { id: 1, label: "Germany", value: 0.555 },
-    { id: 2, label: "Italy", value: 0.394 },
-    { id: 3, label: "Poland", value: 0.991 },
-    { id: 4, label: "SE", value: 0.044 },
-    { id: 5, label: "NL", value: 0.582 },
-    { id: 6, label: "FI", value: 0.255 },
-    { id: 7, label: "FI-Vaasan sahko", value: 0.148 },
-]
-
-const materialEFOptions = [
-    { id: 0, label: "Material type", value: 0, value2: 0 },
-    { id: 1, label: "steel production, converter, low-alloyed | steel, low-alloyed | Cutoff, U", value: 2.03478, value2: 0.0242 },
-    { id: 2, label: "steel production, converter, unalloyed | steel, unalloyed | Cutoff, U", value: 1.61835 , value2: 0.0242 },
-    { id: 3, label: "steel production, electric, chromium steel 18/8 | steel, chromium steel 18/8 | Cutoff, U", value: 4.30564, value2: 0.6250 },
-    { id: 4, label: "steel production, electric, low-alloyed | steel, low-alloyed | Cutoff, U", value: 0.32791, value2: 0.54972},
-    { id: 5, label: "cast iron production | cast iron | Cutoff, U", value: 1.34687, value2: 0.42361  },
-    { id: 6, label: "Ductile iron production", value: 1.63668, value2: 0.42361 },
-]
 
 const MachiningsForm = () => {
     const [infoData, setInfoData] = useState(formInfoState);
@@ -191,11 +163,11 @@ const MachiningsForm = () => {
                     <Input label="Oil" name='oil' unit="l/year" type='number' value={calculationData.oil.value} coefficinetValue={calculationData.oil.coefficinet} fileValue={calculationData.oil.file} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChange} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[6][2]} />
                     <CofDesFileInput options={electricityEFOptions} handleSelection={handleSelection} label="Electrycity" name='electrycity' unit1="kWh" unit2="kg CO2 eq/kWh" type="number" value={calculationData.electrycity.value} coefficinetValue={calculationData.electrycity.coefficinet.value} description={calculationData.electrycity.coefficinet.description} fileValue={calculationData.electrycity.file} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[7][2]} />
                     <Header size={12} variant="h4">Transportation: Route</Header>
-                    <CofDesFileInput options={transportEFOptions} handleSelection={handleSelection} label="Track:" lableVariant={"h4"} unit1="km" unit2="kg CO2 eq/t-km" name='trackCof' type='number' coefficinetValue={calculationData.trackCof.value} description={calculationData.trackCof.description} fileValue={calculationData.trackCof.file} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} />
+                    <CofDesFileInput options={transportEFOptions.land} handleSelection={handleSelection} label="Track:" lableVariant={"h4"} unit1="km" unit2="kg CO2 eq/t-km" name='trackCof' type='number' coefficinetValue={calculationData.trackCof.value} description={calculationData.trackCof.description} fileValue={calculationData.trackCof.file} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} />
                     <TimeElecInput label1="EURO5" label2= "EF" name="euro5" unit1="km" unit2="kg CO2 eq/t-km" type="number" value={calculationData.euro5.value} coefficinetValue={calculationData.trackCof.value} handleChange={handleChangeNumber} sum={(40 / 100) * calculationData.euro5.value * calculationData.trackCof.value * (calculationData.steel.value / 2000)} />
                     <TimeElecInput label1="EURO6" label2= "EF" name="euro6" unit1="km" unit2="kg CO2 eq/t-km" type="number" value={calculationData.euro6.value} coefficinetValue={calculationData.trackCof.value} handleChange={handleChangeNumber} sum={(40 / 100) * calculationData.euro6.value * calculationData.trackCof.value * (calculationData.steel.value / 2000)} />
                     <TimeElecInput label1="EURO7" label2= "EF" name="euro7" unit1="km" unit2="kg CO2 eq/t-km" type="number" value={calculationData.euro7.value} coefficinetValue={calculationData.trackCof.value} handleChange={handleChangeNumber} sum={(40 / 100) * calculationData.euro7.value * calculationData.trackCof.value * (calculationData.steel.value / 2000)} />
-                    <CofDesFileInput options={transportEFOptions} handleSelection={handleSelection} label="Ship:" lableVariant={"h4"} unit1="km" unit2="kg CO2 eq/t-km" name='shipCof' type='number' coefficinetValue={calculationData.shipCof.value} description={calculationData.shipCof.description} fileValue={calculationData.shipCof.file} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} />
+                    <CofDesFileInput options={transportEFOptions.water} handleSelection={handleSelection} label="Ship:" lableVariant={"h4"} unit1="km" unit2="kg CO2 eq/t-km" name='shipCof' type='number' coefficinetValue={calculationData.shipCof.value} description={calculationData.shipCof.description} fileValue={calculationData.shipCof.file} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} />
                     <TimeElecInput label1="RO-RO" label2= "EF" name="roro" unit1="km" unit2="kg CO2 eq/t-km" type="number" value={calculationData.roro.value} coefficinetValue={calculationData.shipCof.value} handleChange={handleChangeNumber} sum={(4000 / 100) * calculationData.roro.value * calculationData.shipCof.value * (calculationData.steel.value / 2000000)} />
                     <Grid item xs={12} mt={4}>
                         <Typography variant='h3'>Total sum is: {totalSum} CO2 eqv GHG kg</Typography>

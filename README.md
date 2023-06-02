@@ -36,6 +36,12 @@ Check out the live version of the website [here](https://lca-tool.link).
 - MongoDB
 - Swagger UI
 
+## Deploying
+- AWS
+- Ubuntu
+- Nginx
+- pm2
+
 ## Useage
 
 First you need to sign in with Google or Microsoft to authenticate and navigate different sections. Then you can navigate in different sections usgin navbar. 

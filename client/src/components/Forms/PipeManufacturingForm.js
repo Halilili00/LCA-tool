@@ -11,6 +11,7 @@ import CofDesInput from '../../toolbox/CofDesInput';
 import usePipeSum from '../../hooks/usePipeSum';
 import TimeElecInput from '../../toolbox/TimeElecInput';
 import CofDesFileInput from '../../toolbox/CofDesFileInput';
+import {transportEFOptions, electricityEFOptions, materialEFOptions, efOfOtherProcess} from '../../consts/options.js';
 
 
 const formInfoState = {
@@ -27,43 +28,27 @@ const formCalculationState = {
     weight: { value: 1, file: "" },
     materialEF: { value: 0, value2: 0, description: "" },
     electricityEF: { value: 0, description: "" },
-    lorry: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
-    sea: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    land: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    land2: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    water: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    air: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
     processElectricityEF: { value: 0, description: "", file: ""},
     cutting: { time: 0, electricity: 0},
     bending: { time: 0, electricity: 0},
     welding: { time: 0, electricity: 0},
     pressureTest: { time: 0, electricity: 0},
     drilling: { time: 0, electricity: 0},
+    tapWater: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    lubricatingOil: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    cuttingFluid: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    cardboardPacakging: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    plasticFilmPackaging: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    outputProduct: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    lubricatingOilWaste: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    cuttingFluidWaste: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    wastewater: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
+    metalScrap: { value: 0, coefficinet: { value: 0, description: "" }, file: "" },
 }
-
-const materialEFOptions = [
-    { id: 0, label: "Material type", value: 0, value2: 0 },
-    { id: 1, label: "steel production, converter, low-alloyed | steel, low-alloyed | Cutoff, U", value: 2.03478, value2: 0.0242 },
-    { id: 2, label: "steel production, converter, unalloyed | steel, unalloyed | Cutoff, U", value: 1.61835 , value2: 0.0242 },
-    { id: 3, label: "steel production, electric, chromium steel 18/8 | steel, chromium steel 18/8 | Cutoff, U", value: 4.30564, value2: 0.6250 },
-    { id: 4, label: "steel production, electric, low-alloyed | steel, low-alloyed | Cutoff, U", value: 0.32791, value2: 0.54972},
-    { id: 5, label: "cast iron production | cast iron | Cutoff, U", value: 1.34687, value2: 0.42361  },
-    { id: 6, label: "Ductile iron production", value: 1.63668, value2: 0.42361 },
-]
-
-const electricityEFOptions = [
-    { id: 0, label: "Countries", value: 0 },
-    { id: 1, label: "Germany", value: 0.555 },
-    { id: 2, label: "Italy", value: 0.394 },
-    { id: 3, label: "Poland", value: 0.991 },
-    { id: 4, label: "SE", value: 0.044 },
-    { id: 5, label: "NL", value: 0.582 },
-    { id: 6, label: "FI", value: 0.255 },
-    { id: 7, label: "FI-Vaasan sahko", value: 0.148 },
-]
-
-const transportEFOptions = [
-    { id: 0, label: "Transport type", value: 0 },
-    { id: 1, label: "market for transport, freight, lorry 16-32 metric ton, EURO5 | transport, freight, lorry 16-32 metric ton, EURO5 | Cutoff, U", value: 0.1646 },
-    { id: 2, label: "market for transport, freight, sea, container ship | transport, freight, sea, container ship | Cutoff, U", value: 0.0094 },
-    { id: 3, label: "market for transport, freight train | transport, freight train | Cutoff, U", value: 0.0451 },
-]
 
 const PipeManufacturingForm = () => {
     const [infoData, setInfoData] = useState(formInfoState);
@@ -128,14 +113,14 @@ const PipeManufacturingForm = () => {
 
     const handleDeleteFile = useCallback((e) => {
         let { name } = e.target;
-        console.log(name)
+        //console.log(name)
         setCalculationData({ ...calculationData, [name]: { ...calculationData[name], file: "" } })
     }, [calculationData]);
 
     const handleSelection = useCallback((e, options) => {
         let { name, value } = e.target;
         const chosen = options.find(({id}) => id === value)
-        console.log(chosen.value)
+        //console.log(Array.isArray(calculationData[name]))
         if (calculationData[name].coefficinet) {
             setCalculationData({ ...calculationData, [name]: { ...calculationData[name], coefficinet: { value: parseFloat(chosen.value, 10), description: calculationData[name].coefficinet.description } } })
         } else {
@@ -185,15 +170,29 @@ const PipeManufacturingForm = () => {
                     <CofDesInput options={materialEFOptions} handleSelection={handleSelection} label="Material EF" unit="kg CO2 eq/kg metal" name='materialEF' type='number' name2='electricityInputEF' value2={calculationData.materialEF.value2} value={calculationData.materialEF.value} description={calculationData.materialEF.description} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} />
                     <CofDesInput options={electricityEFOptions} handleSelection={handleSelection} label="Electricity EF" unit="kg CO2 eq/kWh" name='electricityEF' type='number' value={calculationData.electricityEF.value} description={calculationData.electricityEF.description} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} />
                     <Header size={12} variant="h4">Transport</Header>
-                    <CofDesFileInput options={transportEFOptions} handleSelection={handleSelection} header="Lorry" label="Distance" name="lorry" unit1="km" unit2="kg CO2 eq/t-km" type="number" value={calculationData.lorry.value} coefficinetValue={calculationData.lorry.coefficinet.value} description={calculationData.lorry.coefficinet.description} fileValue={calculationData.lorry.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[1][2]} />
-                    <CofDesFileInput options={transportEFOptions} handleSelection={handleSelection} header="Sea" label="Distance" name="sea" unit1="km" unit2="kg CO2 eq/t-km" type="number" value={calculationData.sea.value} coefficinetValue={calculationData.sea.coefficinet.value} description={calculationData.sea.coefficinet.description} fileValue={calculationData.sea.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[2][2]} />
+                    <CofDesFileInput options={transportEFOptions.land} handleSelection={handleSelection} header="Land" label="Distance" name="land" unit1="km" unit2="kg CO2 eq/t-km" type="number" value={calculationData.land.value} coefficinetValue={calculationData.land.coefficinet.value} description={calculationData.land.coefficinet.description} fileValue={calculationData.land.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[1][2]} />
+                    <CofDesFileInput options={transportEFOptions.land} handleSelection={handleSelection} header="Land2" label="Distance" name="land2" unit1="km" unit2="kg CO2 eq/t-km" type="number" value={calculationData.land2.value} coefficinetValue={calculationData.land2.coefficinet.value} description={calculationData.land2.coefficinet.description} fileValue={calculationData.land2.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[2][2]} />
+                    <CofDesFileInput options={transportEFOptions.water} handleSelection={handleSelection} header="Water" label="Distance" name="water" unit1="km" unit2="kg CO2 eq/t-km" type="number" value={calculationData.water.value} coefficinetValue={calculationData.water.coefficinet.value} description={calculationData.water.coefficinet.description} fileValue={calculationData.water.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[3][2]} />
+                    <CofDesFileInput options={transportEFOptions.air} handleSelection={handleSelection} header="Air" label="Distance" name="air" unit1="km" unit2="kg CO2 eq/t-km" type="number" value={calculationData.air.value} coefficinetValue={calculationData.air.coefficinet.value} description={calculationData.air.coefficinet.description} fileValue={calculationData.air.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[4][2]} />
                     <Header size={12} variant="h4">Mechanical process</Header>
                     <CofDesFileInput options={electricityEFOptions} handleSelection={handleSelection} label="Electricity EF" unit1="km" unit2="kg CO2 eq/kWh" name='processElectricityEF' type='number' coefficinetValue={calculationData.processElectricityEF.value} description={calculationData.processElectricityEF.description} fileValue={calculationData.processElectricityEF.file} handleValue={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} />
-                    <TimeElecInput header="Cutting" label1="Time" label2="Electricity" name="cutting" unit1="min" unit2="kWh/min" type="number" value={calculationData.cutting.time} coefficinetValue={calculationData.cutting.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[3][2]} />
-                    <TimeElecInput header="Bending" label1="Time" label2="Electricity" name="bending" unit1="min" unit2="kWh/min" type="number" value={calculationData.bending.time} coefficinetValue={calculationData.bending.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[4][2]} />
-                    <TimeElecInput header="Welding" label1="Time" label2="Electricity" name="welding" unit1="min" unit2="kWh/min" type="number" value={calculationData.welding.time} coefficinetValue={calculationData.welding.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[5][2]} />
-                    <TimeElecInput header="Pressure test" label1="Time" label2="Electricity" name="pressureTest" unit1="min" unit2="kWh/min" type="number" value={calculationData.pressureTest.time} coefficinetValue={calculationData.pressureTest.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[6][2]} />
-                    <TimeElecInput header="Drilliing" label1="Time" label2="Electricity" name="drilling" unit1="min" unit2="kWh/min" type="number" value={calculationData.drilling.time} coefficinetValue={calculationData.drilling.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[7][2]} />
+                    <TimeElecInput header="Cutting" label1="Time" label2="Electricity" name="cutting" unit1="min" unit2="kWh/min" type="number" value={calculationData.cutting.time} coefficinetValue={calculationData.cutting.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[5][2]} />
+                    <TimeElecInput header="Bending" label1="Time" label2="Electricity" name="bending" unit1="min" unit2="kWh/min" type="number" value={calculationData.bending.time} coefficinetValue={calculationData.bending.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[6][2]} />
+                    <TimeElecInput header="Welding" label1="Time" label2="Electricity" name="welding" unit1="min" unit2="kWh/min" type="number" value={calculationData.welding.time} coefficinetValue={calculationData.welding.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[7][2]} />
+                    <TimeElecInput header="Pressure test" label1="Time" label2="Electricity" name="pressureTest" unit1="min" unit2="kWh/min" type="number" value={calculationData.pressureTest.time} coefficinetValue={calculationData.pressureTest.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[8][2]} />
+                    <TimeElecInput header="Drilliing" label1="Time" label2="Electricity" name="drilling" unit1="min" unit2="kWh/min" type="number" value={calculationData.drilling.time} coefficinetValue={calculationData.drilling.electricity} handleChange={handleChangeTime} handleCoeffinetChange={handleChangeElectricity} sum={sums[9][2]} />
+                    <Header size={12} variant="h4">Other inputs</Header>
+                    <CofDesFileInput options={efOfOtherProcess} handleSelection={handleSelection} header="Tap water" label="Value" name="tapWater" unit1="kg" unit2="kg CO2 eq/kg" type="number" value={calculationData.tapWater.value} coefficinetValue={calculationData.tapWater.coefficinet.value} description={calculationData.tapWater.coefficinet.description} fileValue={calculationData.tapWater.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[10][2]} />
+                    <CofDesFileInput options={efOfOtherProcess} handleSelection={handleSelection} header="Lubricating oil" label="Value" name="lubricatingOil" unit1="kg" unit2="kg CO2 eq/kg" type="number" value={calculationData.lubricatingOil.value} coefficinetValue={calculationData.lubricatingOil.coefficinet.value} description={calculationData.lubricatingOil.coefficinet.description} fileValue={calculationData.lubricatingOil.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[11][2]} />
+                    <CofDesFileInput options={efOfOtherProcess} handleSelection={handleSelection} header="Cutting fluid" label="Value" name="cuttingFluid" unit1="kg" unit2="kg CO2 eq/kg" type="number" value={calculationData.cuttingFluid.value} coefficinetValue={calculationData.cuttingFluid.coefficinet.value} description={calculationData.cuttingFluid.coefficinet.description} fileValue={calculationData.cuttingFluid.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[12][2]} />
+                    <CofDesFileInput options={efOfOtherProcess} handleSelection={handleSelection} header="Cardboard pacakging" label="Value" name="cardboardPacakging" unit1="kg" unit2="kg CO2 eq/kg" type="number" value={calculationData.cardboardPacakging.value} coefficinetValue={calculationData.cardboardPacakging.coefficinet.value} description={calculationData.cardboardPacakging.coefficinet.description} fileValue={calculationData.cardboardPacakging.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[13][2]} />
+                    <CofDesFileInput options={efOfOtherProcess} handleSelection={handleSelection} header="Plastic film packaging" label="Value" name="plasticFilmPackaging" unit1="kg" unit2="kg CO2 eq/kg" type="number" value={calculationData.plasticFilmPackaging.value} coefficinetValue={calculationData.plasticFilmPackaging.coefficinet.value} description={calculationData.plasticFilmPackaging.coefficinet.description} fileValue={calculationData.plasticFilmPackaging.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[14][2]} />
+                    <Header size={12} variant="h4">Output</Header>
+                    <CofDesFileInput options={efOfOtherProcess} handleSelection={handleSelection} header="Product" label="Value" name="outputProduct" unit1="kg" unit2="kg CO2 eq/kg" type="number" value={calculationData.outputProduct.value} coefficinetValue={calculationData.outputProduct.coefficinet.value} description={calculationData.outputProduct.coefficinet.description} fileValue={calculationData.outputProduct.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[15][2]} />
+                    <CofDesFileInput options={efOfOtherProcess} handleSelection={handleSelection} header="Lubricating oil waste" label="Value" name="lubricatingOilWaste" unit1="kg" unit2="kg CO2 eq/kg" type="number" value={calculationData.lubricatingOilWaste.value} coefficinetValue={calculationData.lubricatingOilWaste.coefficinet.value} description={calculationData.lubricatingOilWaste.coefficinet.description} fileValue={calculationData.lubricatingOilWaste.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[16][2]} />
+                    <CofDesFileInput options={efOfOtherProcess} handleSelection={handleSelection} header="Cutting fluid waste" label="Value" name="cuttingFluidWaste" unit1="kg" unit2="kg CO2 eq/kg" type="number" value={calculationData.cuttingFluidWaste.value} coefficinetValue={calculationData.cuttingFluidWaste.coefficinet.value} description={calculationData.cuttingFluidWaste.coefficinet.description} fileValue={calculationData.cuttingFluidWaste.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[17][2]} />
+                    <CofDesFileInput options={efOfOtherProcess} handleSelection={handleSelection} header="Wastewater" label="Value" name="wastewater" unit1="kg" unit2="kg CO2 eq/kg" type="number" value={calculationData.wastewater.value} coefficinetValue={calculationData.wastewater.coefficinet.value} description={calculationData.wastewater.coefficinet.description} fileValue={calculationData.wastewater.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[18][2]} />
+                    <CofDesFileInput options={efOfOtherProcess} handleSelection={handleSelection} header="Metal scrap" label="Value" name="metalScrap" unit1="kg" unit2="kg CO2 eq/kg" type="number" value={calculationData.metalScrap.value} coefficinetValue={calculationData.metalScrap.coefficinet.value} description={calculationData.metalScrap.coefficinet.description} fileValue={calculationData.metalScrap.file} handleValue={handleCoeffinetChangeValue} handleChange={handleChangeNumber} handleCoeffinetChange={handleCoeffinetChangeValue} handleDescription={handleCoeffinetChangeDescription} handleFile={handleFile} handleDeleteFile={handleDeleteFile} sum={sums[19][2]} />
                     <Grid item xs={12} mt={4}>
                         <Typography variant='h3'>Total sum is: {totalSum} kg CO2 eq</Typography>
                     </Grid>

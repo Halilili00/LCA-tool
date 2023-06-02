@@ -131,10 +131,10 @@ const DataTable = ({ findPosts }) => {
     //console.log(calculateSum(filteredPosts[0]))
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="custom pagination table">
+            <Table aria-label="custom pagination table">
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell onClick={() => handleSortRequest("createdAt")} sortDirection={orderDirection}>
+                        <StyledTableCell style={{position: "sticky", left: 0, backgroundColor: "black"}} onClick={() => handleSortRequest("createdAt")} sortDirection={orderDirection}>
                             <TableSortLabel
                                 sx={{ '&.MuiTableSortLabel-root': { color: 'white' }, '& .MuiTableSortLabel-icon': { color: 'white !important', } }}
                                 direction={orderDirection}
@@ -165,9 +165,9 @@ const DataTable = ({ findPosts }) => {
                 <TableBody>
                     {(rowsPerPage > 0 ? filteredPosts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         : filteredPosts)
-                        .map(post => (
+                        .map((post, index) => (
                             <StyledTableRow key={post._id}>
-                                <StyledTableCell onClick={() => navigate(`/LCADatas/${post.tempID}/${post._id}`)}>{post.lcaID}</StyledTableCell>
+                                <TableCell style={{ position: "sticky", left: 0, backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white"}} onClick={() => navigate(`/LCADatas/${post.tempID}/${post._id}`)}>{post.lcaID}</TableCell>
                                 <StyledTableCell>{post.partName}</StyledTableCell>
                                 <StyledTableCell>{post.partID}</StyledTableCell>
                                 <StyledTableCell>{post.creator}</StyledTableCell>

@@ -95,12 +95,12 @@ const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type
                         </Grid>
                         <Grid item minWidth="100%">
                             {fileValue ?
-                                <ButtonGroup>
+                                <ButtonGroup fullWidth>
                                     <Tooltip title="Download file">
                                         <Button variant="outlined" onClick={() => downloadPDF(fileValue.data, fileValue.name)} endIcon={<DownloadIcon />}>{fileValue.name.length > 27 ? `${fileValue.name.split("").splice(0, 24).join("")}...` : fileValue.name}</Button>
                                     </Tooltip>
                                     <Tooltip title="Delte file" >
-                                        <Button variant='outlined' name={name} onClick={handleDeleteFile}>X</Button>
+                                        <Button variant='outlined' style={{maxWidth: "50px"}} name={name} onClick={handleDeleteFile}>X</Button>
                                     </Tooltip>
                                 </ButtonGroup>
                                 :
@@ -129,12 +129,12 @@ const CofDesFileInput = ({ header, label, lableVariant, name, unit1, unit2, type
                         </Grid>
                         <Grid item xs={12}>
                             {fileValue ?
-                                <ButtonGroup>
+                                <ButtonGroup fullWidth>
                                     <Tooltip title="Download file">
                                         <Button variant="outlined" onClick={() => downloadPDF(fileValue.data, fileValue.name)} endIcon={<DownloadIcon />}>{fileValue.name.length > 27 ? `${fileValue.name.split("").splice(0, 24).join("")}...` : fileValue.name}</Button>
                                     </Tooltip>
                                     <Tooltip title="Delte file" >
-                                        <Button variant='outlined' name={name} onClick={handleDeleteFile}>X</Button>
+                                        <Button variant='outlined' style={{maxWidth: "50px"}} name={name} onClick={handleDeleteFile}>X</Button>
                                     </Tooltip>
                                 </ButtonGroup>
                                 :

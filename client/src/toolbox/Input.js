@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { Button, ButtonGroup, Grid, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
+import ClearIcon from '@mui/icons-material/Clear';
 import Header from "./Header";
 
 const Input = ({ header, name, type, label, value, description, handleChange, unit, handleFile, readOnly, coefficinetValue, handleCoeffinetChange, sum, fileValue, handleDeleteFile, handleDescription }) => {
@@ -108,12 +109,12 @@ const Input = ({ header, name, type, label, value, description, handleChange, un
         }
         <Grid item xs={12}>
           {fileValue ?
-            <ButtonGroup>
+            <ButtonGroup fullWidth>
               <Tooltip title="Download file">
                 <Button variant="outlined" onClick={() => downloadPDF(fileValue.data, fileValue.name)} endIcon={<DownloadIcon />}>{fileValue.name.length > 27 ? `${fileValue.name.split("").splice(0, 24).join("")}...` : fileValue.name}</Button>
               </Tooltip>
-              <Tooltip title="Delte file" >
-                <Button variant='outlined' name={name} onClick={handleDeleteFile}>X</Button>
+              <Tooltip title="Delte file">
+                <Button variant='outlined' style={{maxWidth: "50px"}} name={name} onClick={handleDeleteFile}>X</Button>
               </Tooltip>
             </ButtonGroup>
             :

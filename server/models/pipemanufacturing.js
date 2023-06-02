@@ -116,14 +116,30 @@ const pipemanufacturingSchema = mongoose.Schema({
     weight: {value: { type: Number, default: 0},file: { data: String, name: String}},
     materialEF: {value: { type: Number, default: 0}, value2: { type: Number, default: 0}, description: { type: String, default: ""}}, 
     electricityEF: {value: { type: Number, default: 0}, description: { type: String, default: ""}},
-    lorry: {value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String}},
-    sea: {value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String}},
+    land: {value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String}},
+    land2: {value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String}}, 
+    water: {value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String}},   
+    air: {value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String}}, 
+    /*air: {
+        type: [{value: Number, coefficinet: {value: Number, description: String}, file: { data: String, name: String}}],
+        default: [{value: 0, coefficinet: {value: 0, description: ""}, file:""}],
+    },*/
     processElectricityEF: {value: { type: Number, default: 0}, description: { type: String, default: ""}, file: { data: String, name: String}},
     cutting: {time:{ type: Number, default: 0}, electricity: { type: Number, default: 0}},
     bending: {time:{ type: Number, default: 0}, electricity: { type: Number, default: 0}},
     welding: {time:{ type: Number, default: 0}, electricity: { type: Number, default: 0}},
     pressureTest: {time:{ type: Number, default: 0}, electricity: { type: Number, default: 0}},
     drilling: {time:{ type: Number, default: 0}, electricity: { type: Number, default: 0}},
+    tapWater: { value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String} },
+    lubricatingOil: { value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String} },
+    cuttingFluid: { value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String} },
+    cardboardPacakging: { value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String} },
+    plasticFilmPackaging: { value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String} },
+    outputProduct: { value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String} },
+    lubricatingOilWaste: { value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String} },
+    cuttingFluidWaste: { value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String} },
+    wastewater: { value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String} },
+    metalScrap: { value: { type: Number, default: 0}, coefficinet: {value: { type: Number, default: 0}, description: { type: String, default: ""}}, file: { data: String, name: String} },
 })
 
 const PipeManufacturing = mongoose.model("PipeManufacturing", pipemanufacturingSchema);
