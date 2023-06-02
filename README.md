@@ -36,7 +36,7 @@ Check out the live version of the website [here](https://lca-tool.link).
 - MongoDB
 - Swagger UI
 
-## Deploying
+### Deploying
 - AWS
 - Ubuntu
 - Nginx
