@@ -15,7 +15,7 @@ body {
 
 @media print {
   @page {
-    size: 50cm 80cm;
+    size: 60cm 80cm;
     margin: 0;
   }
 

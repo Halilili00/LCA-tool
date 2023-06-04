@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button, ButtonGroup, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography, styled, tableCellClasses } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Button, ButtonGroup, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, styled, tableCellClasses } from '@mui/material'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,10 +9,8 @@ import usePipeSum from '../../hooks/usePipeSum';
 import { deletePost } from '../../redux/actions/postActions';
 import Barcode from 'react-barcode';
 import moment from 'moment';
-import ProcessCell from '../../toolbox/ProcessCell';
 import Charts from '../../toolbox/Charts';
-import FileCell from '../../toolbox/FileCell';
-import ValueDescriptionCell from '../../toolbox/ValueDescriptionCell';
+import CustomTableCell from '../../toolbox/CustomTableCell';
 
 const HeadTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.body}`]: {
@@ -29,8 +27,8 @@ const PipeManufacturingPage = () => {
   const dispatch = useDispatch();
   const { totalSum, sums, chartCategorySums, chartSums } = usePipeSum(post);
   const { handleOpenDialog } = useDialogAlert();
-  //const myComponentRef = useRef(null);
-  //const [myComponentHeight, setMyComponentHeight] = useState(0);
+  const [pageBrake, setPageBrake] = useState('avoid');
+
 
   const handleDeletePost = (tempID, id) => {
     handleOpenDialog({
@@ -42,14 +40,15 @@ const PipeManufacturingPage = () => {
     })
   }
 
-  /*useEffect(() => {
-    setTimeout(() => {
-      setMyComponentHeight(myComponentRef.current.clientHeight)
-    }, 500);
-  }, [post])*/
+  useEffect(() => {
+    if(totalSum>0){
+      setPageBrake('always')
+    }
+  }, [])
 
-  console.log(post)
-  console.log(sums)
+  //console.log(post)
+  //console.log(sums)
+  console.log(pageBrake)
   //console.log(JSON.stringify(post))
   return (
     <div>
@@ -69,7 +68,7 @@ const PipeManufacturingPage = () => {
                 <Button variant='contained' onClick={() => window.print()}><PictureAsPdfIcon /></Button>
               </ButtonGroup>
             </Grid>
-            <Grid container direction="column" sx={{ "@media print": { "&": { margin: "10px 0 20px 0" } } }}>
+            <Grid container direction="column" sx={{ "@media print": { "&": {} } }}>
               <Grid item container spacing={2} sx={{ alignItems: "center", "@media print": { "&": { display: 'none' } } }}>
                 <Grid item>
                   <Typography variant='h5' align="left">LCAID:</Typography>
@@ -112,150 +111,109 @@ const PipeManufacturingPage = () => {
             </Grid>
           </Grid>
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <Typography variant=''>Material</Typography>
+            <Table style={{ minWidth: "900px" }} size='small' aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ position: "sticky", left: 0, backgroundColor: "white" }}></TableCell>
+                  <TableCell align="right">Value</TableCell>
+                  <TableCell align="right">Impact (kg CO2 eq)</TableCell>
+                  <TableCell align="right">File/Description</TableCell>
+                </TableRow>
+              </TableHead>
               <TableBody>
+                <CustomTableCell rowName="Weight" unit="kg" value={post.weight.value} file={post.weight.file} />
+                <CustomTableCell rowSpan={2} rowName="Material EF" unit="kg CO2 eq/kg metal" value={post.materialEF.value} description={post.materialEF.description} />
+                <CustomTableCell afterRowSpan rowName="Electricity input EF" unit="kWh/kg metal" value={post.materialEF.value2} />
+                <CustomTableCell rowName="Electricity EF" unit="kg CO2 eq/kWh" value={post.electricityEF.value} description={post.electricityEF.description} />
                 <TableRow>
-                  <HeadTableCell colSpan={7} style={{ fontWeight: "600" }}>Material:</HeadTableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={5} ></TableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }}>Impact (kg CO2 eq)</HeadTableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }}>File</HeadTableCell>
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell style={{ position: "sticky", left: 0, backgroundColor: "white" }}>Weight</HeadTableCell>
-                  <TableCell colSpan={4}>{post.weight.value} kg</TableCell>
-                  {sums[0][2] ? <TableCell rowSpan={4}>{sums[0][2].toFixed(2)}</TableCell> : <TableCell rowSpan={2}></TableCell>}
-                  <FileCell rowSpan={4} file={post.weight.file} />
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell style={{ position: "sticky", left: 0, backgroundColor: "white" }}>Material EF</HeadTableCell>
-                  <TableCell colSpan={2}>{post.materialEF.value} kg CO2 eq/kg metal</TableCell>
-                  <TableCell colSpan={2} rowSpan={2}>{post.materialEF.description}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell style={{ position: "sticky", left: 0, backgroundColor: "white" }}>Electricity input EF</HeadTableCell>
-                  <TableCell colSpan={2}>{post.materialEF.value2} kWh/kg metal</TableCell>
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell style={{ position: "sticky", left: 0, backgroundColor: "white" }}>Electricity EF</HeadTableCell>
-                  <TableCell colSpan={2}>{post.electricityEF.value} kg CO2 eq/kWh</TableCell>
-                  <TableCell colSpan={2}>{post.electricityEF.description}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell colSpan={7} style={{ fontWeight: "600" }}>Transport:</HeadTableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={5}></TableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }}>Impact (kg CO2 eq)</HeadTableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }}>File</HeadTableCell>
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell rowSpan="2" style={{ fontWeight: "600", position: "sticky", left: 0, backgroundColor: "white" }}>Land:</HeadTableCell>
-                  <TableCell >Distance: {post.land.value} km</TableCell>
-                  <TableCell colSpan={3}></TableCell>
-                  {sums[1][2] ? <TableCell rowSpan={2}>{sums[1][2].toFixed(2)}</TableCell> : <TableCell rowSpan={2}></TableCell>}
-                  <FileCell rowSpan={2} file={post.land.file} />
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={2}>EF: {post.land.coefficinet.value} kg CO2 eq/t-km</TableCell>
-                  <TableCell colSpan={2} style={{ width: "260px" }}>{post.land.coefficinet.description}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell rowSpan="2" style={{ fontWeight: "600", position: "sticky", left: 0, backgroundColor: "white" }}>Land2:</HeadTableCell>
-                  <TableCell >Distance: {post.land2.value} km</TableCell>
-                  <TableCell colSpan={3}></TableCell>
-                  {sums[2][2] ? <TableCell rowSpan={2}>{sums[2][2].toFixed(2)}</TableCell> : <TableCell rowSpan={2}></TableCell>}
-                  <FileCell rowSpan={2} file={post.land2.file} />
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={2}>EF: {post.land2.coefficinet.value} kg CO2 eq/t-km</TableCell>
-                  <TableCell colSpan={2} style={{ width: "260px" }}>{post.land2.coefficinet.description}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell rowSpan="2" style={{ fontWeight: "600", position: "sticky", left: 0, backgroundColor: "white" }}>Water:</HeadTableCell>
-                  <TableCell>Distance: {post.water.value} km</TableCell>
-                  <TableCell colSpan={3}></TableCell>
-                  {sums[3][2] ? <TableCell rowSpan={2}>{sums[3][2].toFixed(2)}</TableCell> : <TableCell rowSpan={2}></TableCell>}
-                  <FileCell rowSpan={2} file={post.water.file} />
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={2}>EF: {post.water.coefficinet.value} kg CO2 eq/t-km</TableCell>
-                  <TableCell colSpan={2} style={{ width: "250px" }}>{post.water.coefficinet.description}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell rowSpan="2" style={{ fontWeight: "600", position: "sticky", left: 0, backgroundColor: "white" }}>Air:</HeadTableCell>
-                  <TableCell>Distance: {post.air.value} km</TableCell>
-                  <TableCell colSpan={3}></TableCell>
-                  {sums[4][2] ? <TableCell rowSpan={2}>{sums[4][2].toFixed(2)}</TableCell> : <TableCell rowSpan={2}></TableCell>}
-                  <FileCell rowSpan={2} file={post.air.file} />
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={2}>EF: {post.air.coefficinet.value} kg CO2 eq/t-km</TableCell>
-                  <TableCell colSpan={2} style={{ width: "250px" }}>{post.air.coefficinet.description}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell colSpan={7} style={{ fontWeight: "600", position: "sticky", left: 0, backgroundColor: "white" }}>Mechanical process:</HeadTableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={5}></TableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }}>Impact (kg CO2 eq)</HeadTableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }}>File</HeadTableCell>
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell style={{ position: "sticky", left: 0, backgroundColor: "white" }}>Electricity EF</HeadTableCell>
-                  <TableCell colSpan={2}>{post.processElectricityEF.value} kg CO2 eq/kWh</TableCell>
-                  <TableCell colSpan={2}>{post.processElectricityEF.description}</TableCell>
-                  <TableCell ></TableCell>
-                  <FileCell rowSpan={1} file={post.processElectricityEF.file} />
-                </TableRow>
-                <TableRow>
-                  <HeadTableCell style={{ fontWeight: "600", position: "sticky", left: 0, backgroundColor: "white" }}></HeadTableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }} colSpan={2}>Time (mins)</HeadTableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }} colSpan={4}>Electricity (kWh/min)</HeadTableCell>
-                </TableRow>
-                <ProcessCell header="Cutting" time={post.cutting.time} electricity={post.cutting.electricity} sum={sums[5][2]} />
-                <ProcessCell header="Bending" time={post.bending.time} electricity={post.bending.electricity} sum={sums[6][2]} />
-                <ProcessCell header="Welding" time={post.welding.time} electricity={post.welding.electricity} sum={sums[7][2]} />
-                <ProcessCell header="Pressure test" time={post.pressureTest.time} electricity={post.pressureTest.electricity} sum={sums[8][2]} />
-                <ProcessCell header="Drilling" time={post.drilling.time} electricity={post.drilling.electricity} sum={sums[9][2]} />
-                <TableRow>
-                  <HeadTableCell colSpan={7} style={{ fontWeight: "600" }}>Other input:</HeadTableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={5}></TableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }}>Impact (kg CO2 eq)</HeadTableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }}>File</HeadTableCell>
-                </TableRow>
-                <ValueDescriptionCell header="Tap water" value={post.tapWater.value} coefficinet={post.tapWater.coefficinet.value} description={post.tapWater.coefficinet.description} sum={sums[10][2]} file={post.tapWater.file} />
-                <ValueDescriptionCell header="Lubricating oil" value={post.lubricatingOil.value} coefficinet={post.lubricatingOil.coefficinet.value} description={post.lubricatingOil.coefficinet.description} sum={sums[11][2]} file={post.lubricatingOil.file} />
-                <ValueDescriptionCell header="Cutting fluid" value={post.cuttingFluid.value} coefficinet={post.cuttingFluid.coefficinet.value} description={post.cuttingFluid.coefficinet.description} sum={sums[12][2]} file={post.cuttingFluid.file} />
-                <ValueDescriptionCell header="Cardboard pacakging" value={post.cardboardPacakging.value} coefficinet={post.cardboardPacakging.coefficinet.value} description={post.cardboardPacakging.coefficinet.description} sum={sums[13][2]} file={post.cardboardPacakging.file} />
-                <ValueDescriptionCell header="Plastic film packaging" value={post.plasticFilmPackaging.value} coefficinet={post.plasticFilmPackaging.coefficinet.value} description={post.plasticFilmPackaging.coefficinet.description} sum={sums[14][2]} file={post.plasticFilmPackaging.file} />
-                <TableRow>
-                  <HeadTableCell colSpan={7} style={{ fontWeight: "600" }}>Output:</HeadTableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={5}></TableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }}>Impact (kg CO2 eq)</HeadTableCell>
-                  <HeadTableCell style={{ fontWeight: "600" }}>File</HeadTableCell>
-                </TableRow>
-                <ValueDescriptionCell header="Product" value={post.outputProduct.value} coefficinet={post.outputProduct.coefficinet.value} description={post.outputProduct.coefficinet.description} sum={sums[15][2]} file={post.outputProduct.file} />
-                <ValueDescriptionCell header="Lubricating oil waste" value={post.lubricatingOilWaste.value} coefficinet={post.lubricatingOilWaste.coefficinet.value} description={post.lubricatingOilWaste.coefficinet.description} sum={sums[16][2]} file={post.lubricatingOilWaste.file} />
-                <ValueDescriptionCell header="Cutting fluid waste" value={post.cuttingFluidWaste.value} coefficinet={post.cuttingFluidWaste.coefficinet.value} description={post.cuttingFluidWaste.coefficinet.description} sum={sums[17][2]} file={post.cuttingFluidWaste.file} />
-                <ValueDescriptionCell header="Wastewater" value={post.wastewater.value} coefficinet={post.wastewater.coefficinet.value} description={post.wastewater.coefficinet.description} sum={sums[18][2]} file={post.wastewater.file} />
-                <ValueDescriptionCell header="Metal scrap" value={post.metalScrap.value} coefficinet={post.metalScrap.coefficinet.value} description={post.metalScrap.coefficinet.description} sum={sums[19][2]} file={post.metalScrap.file} />
-                <TableRow>
-                  <TableCell rowSpan={4} />
-                  <TableCell colSpan={4} style={{ fontWeight: "650" }}>Total impact</TableCell>
-                  <TableCell >{totalSum} kg CO2 eq</TableCell>
+                  <TableCell style={{ position: "sticky", left: 0, backgroundColor: "white" }}>Mateiral total Impact:</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell align='right' style={{ minWidth: "226px" }}>{sums[0][2].toFixed(2)}</TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
-          <Grid item style={{ backgroundColor: "white", marginBottom: "10px" }}>
-            <Charts chartCategorySums={chartCategorySums} chartSums={chartSums} />
+          <TableContainer component={Paper}>
+            <Typography variant=''>Transport</Typography>
+            <Table style={{ minWidth: "900px" }} size='small' aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ position: "sticky", left: 0, backgroundColor: "white" }}></TableCell>
+                  <TableCell align="right">Distance (km)</TableCell>
+                  <TableCell align="right">EF (kg CO2 eq/t-km)</TableCell>
+                  <TableCell align="right">Impact (kg CO2 eq)</TableCell>
+                  <TableCell align="right">File/Description</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <CustomTableCell rowName="Land" value={post.land.value} coefficinet={post.land.coefficinet.value} description={post.land.coefficinet.description} file={post.land.file} sum={sums[1][2]} />
+                <CustomTableCell rowName="Land2" value={post.land.value} coefficinet={post.land2.coefficinet.value} description={post.land2.coefficinet.description} file={post.land2.file} sum={sums[2][2]} />
+                <CustomTableCell rowName="Water" value={post.water.value} coefficinet={post.water.coefficinet.value} description={post.water.coefficinet.description} file={post.water.file} sum={sums[3][2]} />
+                <CustomTableCell rowName="Air" value={post.air.value} coefficinet={post.air.coefficinet.value} description={post.air.coefficinet.description} file={post.air.file} sum={sums[4][2]} />
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TableContainer component={Paper}>
+            <Typography variant=''>Mechanical process</Typography>
+            <Table style={{ minWidth: "1000px" }} size='small' aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ position: "sticky", left: 0, backgroundColor: "white" }}></TableCell>
+                  <TableCell align="right">Time (mins)</TableCell>
+                  <TableCell align="right">Electricity (kWh/min)</TableCell>
+                  <TableCell align="right">Electricity EF (kg CO2 eq/kWh)</TableCell>
+                  <TableCell align="right">Impact (kg CO2 eq)</TableCell>
+                  <TableCell align="right">File/Description</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <CustomTableCell rowSpan={5} rowName="Cutting" value={post.cutting.time} coefficinet={post.cutting.electricity} coefficinet2={post.processElectricityEF.value} file={post.processElectricityEF.file} sum={sums[5][2]} />
+                <CustomTableCell afterRowSpan rowName="Bending" value={post.bending.time} coefficinet={post.bending.electricity} coefficinet2={post.processElectricityEF.value} sum={sums[6][2]} />
+                <CustomTableCell afterRowSpan rowName="Welding" value={post.welding.time} coefficinet={post.welding.electricity} coefficinet2={post.processElectricityEF.value} sum={sums[7][2]} />
+                <CustomTableCell afterRowSpan rowName="Pressure test" value={post.pressureTest.time} coefficinet={post.pressureTest.electricity} coefficinet2={post.processElectricityEF.value} sum={sums[8][2]} />
+                <CustomTableCell afterRowSpan rowName="Drilling" value={post.drilling.time} coefficinet={post.drilling.electricity} coefficinet2={post.processElectricityEF.value} sum={sums[9][2]} />
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TableContainer component={Paper}>
+            <Typography variant=''>Other input and Output</Typography>
+            <Table style={{ minWidth: "900px" }} size='small' aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ position: "sticky", left: 0, backgroundColor: "white" }}></TableCell>
+                  <TableCell align="right">Value (kg)</TableCell>
+                  <TableCell align="right">EF (kg CO2 eq/t-km)</TableCell>
+                  <TableCell align="right">Impact (kg CO2 eq)</TableCell>
+                  <TableCell align="right">File/Description</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <CustomTableCell rowName="Tap water" value={post.tapWater.value} coefficinet={post.tapWater.coefficinet.value} description={post.tapWater.coefficinet.description} sum={sums[10][2]} file={post.tapWater.file} />
+                <CustomTableCell rowName="Lubricating oil" value={post.lubricatingOil.value} coefficinet={post.lubricatingOil.coefficinet.value} description={post.lubricatingOil.coefficinet.description} sum={sums[11][2]} file={post.lubricatingOil.file} />
+                <CustomTableCell rowName="Cutting fluid" value={post.cuttingFluid.value} coefficinet={post.cuttingFluid.coefficinet.value} description={post.cuttingFluid.coefficinet.description} sum={sums[12][2]} file={post.cuttingFluid.file} />
+                <CustomTableCell rowName="Cardboard pacakging" value={post.cardboardPacakging.value} coefficinet={post.cardboardPacakging.coefficinet.value} description={post.cardboardPacakging.coefficinet.description} sum={sums[13][2]} file={post.cardboardPacakging.file} />
+                <CustomTableCell rowName="Plastic film packaging" value={post.plasticFilmPackaging.value} coefficinet={post.plasticFilmPackaging.coefficinet.value} description={post.plasticFilmPackaging.coefficinet.description} sum={sums[14][2]} file={post.plasticFilmPackaging.file} />
+                <CustomTableCell rowName="Product" value={post.outputProduct.value} coefficinet={post.outputProduct.coefficinet.value} description={post.outputProduct.coefficinet.description} sum={sums[15][2]} file={post.outputProduct.file} />
+                <CustomTableCell rowName="Lubricating oil waste" value={post.lubricatingOilWaste.value} coefficinet={post.lubricatingOilWaste.coefficinet.value} description={post.lubricatingOilWaste.coefficinet.description} sum={sums[16][2]} file={post.lubricatingOilWaste.file} />
+                <CustomTableCell rowName="Cutting fluid waste" value={post.cuttingFluidWaste.value} coefficinet={post.cuttingFluidWaste.coefficinet.value} description={post.cuttingFluidWaste.coefficinet.description} sum={sums[17][2]} file={post.cuttingFluidWaste.file} />
+                <CustomTableCell rowName="Wastewater" value={post.wastewater.value} coefficinet={post.wastewater.coefficinet.value} description={post.wastewater.coefficinet.description} sum={sums[18][2]} file={post.wastewater.file} />
+                <CustomTableCell rowName="Metal scrap" value={post.metalScrap.value} coefficinet={post.metalScrap.coefficinet.value} description={post.metalScrap.coefficinet.description} sum={sums[19][2]} file={post.metalScrap.file} />
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Grid item container margin="20px 0 0px 0">
+            <Grid item xs={6}>
+              <Typography variant=''>Total emission: </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant=''>{totalSum} CO2 eqv GHG kg</Typography>
+            </Grid>
           </Grid>
+          {totalSum>0 && <Grid item style={{ backgroundColor: "white", marginBottom: "10px" }}>
+            <Charts chartCategorySums={chartCategorySums} chartSums={chartSums} pageBrake={pageBrake} />
+          </Grid>}
         </Grid>
       }
     </div >

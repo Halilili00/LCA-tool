@@ -3,7 +3,7 @@ import { Grid, Typography } from "@mui/material";
 import Chart from 'react-google-charts';
 import useSum from '../hooks/useSum';
 
-const PieChart = ({ chartCategorySums, chartSums }) => {
+const PieChart = ({ chartCategorySums, chartSums, pageBrake }) => {
     const options = {
         sankey: {
             node: {
@@ -53,9 +53,9 @@ const PieChart = ({ chartCategorySums, chartSums }) => {
         //console.log("happen")
     }, [chartSums])
 
-    console.log(sankeyData)
+    console.log(pageBrake)
     return (
-        <>{sum > 0 && <Grid container direction="column" sx={{ pageBreakBefore: "always" }}>
+        <>{sum > 0 && <Grid container direction="column" sx={{ pageBreakBefore: "always"}}>
                 <Grid item style={{ marginTop: "20px" }}>
                     <Typography variant='h4' color="black">GHG breakdown</Typography>
                 </Grid>
